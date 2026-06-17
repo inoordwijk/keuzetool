@@ -1258,14 +1258,13 @@ input[type=text]:focus, select:focus { outline: none; border-color: var(--ao); }
 let currentScreen = 1;
 let finalChoice = '';
 let profileData = null;
-let GAS_URL = '';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxgUBD-Kmyy4a2sKlwFCts8l4S3A9VGma3DwDfmH8iYFyuuJmz-v9pvhEmF5TT1YfFzYA/exec';
 
 const STEPS = ['','Welkom','AO vs IB','Wie ben jij?','AI & jij','Jouw DNA','Keuze'];
 
 function startTool() {
   const name = document.getElementById('studentName').value.trim();
   const klas = document.getElementById('studentKlas').value;
-  GAS_URL = document.getElementById('gasUrl').value.trim();
   if (!name) { alert('Vul je naam in om verder te gaan.'); return; }
   if (!klas) { alert('Kies je klas om verder te gaan.'); return; }
   goTo(2);
@@ -1352,23 +1351,21 @@ function animateLoadingSteps() {
   }, 1200);
 }
 
-  // ── API configuratie ──
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycbxgUBD-Kmyy4a2sKlwFCts8l4S3A9VGma3DwDfmH8iYFyuuJmz-v9pvhEmF5TT1YfFzYA/exec';
-
-  // Leesbare labels voor scenario-antwoorden
-  const SC_LABELS = {
-    // Scenario 1: kassaapp
-    'ao1': 'Broncode bekijken (code-aanpak)',
-    'ib1': 'Serverbelasting controleren (infra-aanpak)',
-    'ao2': 'Gebruikers interviewen (gebruikers-aanpak)',
-    'x1':  'Meer info nodig / weet het niet',
-    // Scenario 2: stageplaats
+  // Leesbare labels per scenario
+  const SC1_LABELS = {
+    'ao1': 'Broncode bekijken — code-aanpak',
+    'ib1': 'Serverbelasting controleren — infra-aanpak',
+    'ao2': 'Gebruikers interviewen — gebruikers-aanpak',
+    'x1':  'Meer info nodig / weet het nog niet'
+  };
+  const SC2_LABELS = {
     'ao':  'Optie A — systeem bouwen (AO)',
     'ib':  'Optie B — netwerk stabiel houden (IB)',
-    'x':   'Twijfel — allebei interessant',
-    // Scenario 3: gehackte laptop
-    'ib1': 'Hoe hacker binnenkwam onderzoeken (IB)',
-    'ao1': 'Script schrijven om toekomstige aanvallen te detecteren (AO)',
+    'x':   'Twijfel — allebei interessant'
+  };
+  const SC3_LABELS = {
+    'ib1': 'Uitzoeken hoe hacker binnenkwam — infra-aanpak',
+    'ao1': 'Script schrijven voor toekomstige detectie — code-aanpak',
     'x1':  'Google openen en tutorial volgen'
   };
 
@@ -1400,9 +1397,9 @@ function animateLoadingSteps() {
       'Product bouwen vs. omgeving bewaken: ' + sliderLabel(data.sl4, 'Product bouwen', 'Omgeving bewaken'),
     ].join(' | ');
 
-    const sc1 = SC_LABELS[data.sc1] || data.sc1 || 'niet beantwoord';
-    const sc2 = SC_LABELS[data.sc2] || data.sc2 || 'niet beantwoord';
-    const sc3 = SC_LABELS[data.sc3] || data.sc3 || 'niet beantwoord';
+    const sc1 = SC1_LABELS[data.sc1] || data.sc1 || 'niet beantwoord';
+    const sc2 = SC2_LABELS[data.sc2] || data.sc2 || 'niet beantwoord';
+    const sc3 = SC3_LABELS[data.sc3] || data.sc3 || 'niet beantwoord';
 
     const userContent = encodeURIComponent(
       'STUDENT: ' + data.naam + ' | KLAS: ' + data.klas + '\n\n' +
@@ -1471,9 +1468,9 @@ function animateLoadingSteps() {
       sl2: sliderLabel(data.sl2, 'Iets gemaakt', 'Alles draait soepel'),
       sl3: sliderLabel(data.sl3, 'Algoritme', 'Server/netwerk'),
       sl4: sliderLabel(data.sl4, 'Product bouwen', 'Omgeving bewaken'),
-      sc1: SC_LABELS[data.sc1] || data.sc1 || '',
-      sc2: SC_LABELS[data.sc2] || data.sc2 || '',
-      sc3: SC_LABELS[data.sc3] || data.sc3 || '',
+      sc1: SC1_LABELS[data.sc1] || data.sc1 || '',
+      sc2: SC2_LABELS[data.sc2] || data.sc2 || '',
+      sc3: SC3_LABELS[data.sc3] || data.sc3 || '',
       open1: data.open1.substring(0, 300),
       open2: data.open2.substring(0, 300),
       open3: data.open3.substring(0, 300),
