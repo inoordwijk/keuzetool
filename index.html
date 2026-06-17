@@ -767,6 +767,10 @@ input[type=text]:focus, select:focus { outline: none; border-color: var(--ao); }
       <option value="PT 2.06.02">PT 2.06.02</option>
     </select>
 
+    <span class="field-label">E-mailadres</span>
+    <input type="email" id="studentEmail" placeholder="jouw.naam@email.com">
+    <div style="font-size:12px; color:var(--color-text-tertiary); margin-top:4px;">Jouw profiel wordt naar dit adres gemaild na afloop.</div>
+
     <div class="divider"></div>
     <div class="disclaimer">
       <span class="material-icons-round">info</span>
@@ -1265,8 +1269,10 @@ const STEPS = ['','Welkom','AO vs IB','Wie ben jij?','AI & jij','Jouw DNA','Keuz
 function startTool() {
   const name = document.getElementById('studentName').value.trim();
   const klas = document.getElementById('studentKlas').value;
+  const email = document.getElementById('studentEmail').value.trim();
   if (!name) { alert('Vul je naam in om verder te gaan.'); return; }
   if (!klas) { alert('Kies je klas om verder te gaan.'); return; }
+  if (!email || !email.includes('@')) { alert('Vul een geldig e-mailadres in.'); return; }
   goTo(2);
 }
 
@@ -1325,6 +1331,7 @@ function collectData() {
   return {
     naam: document.getElementById('studentName').value,
     klas: document.getElementById('studentKlas').value,
+    email: document.getElementById('studentEmail').value.trim(),
     sl1: document.getElementById('sl1').value,
     sl2: document.getElementById('sl2').value,
     sl3: document.getElementById('sl3').value,
@@ -1474,6 +1481,7 @@ function animateLoadingSteps() {
       type: 'submit',
       naam: data.naam,
       klas: data.klas,
+      email: data.email,
       sl1: sliderLabel(data.sl1, 'Bouwen', 'Repareren'),
       sl2: sliderLabel(data.sl2, 'Iets gemaakt', 'Alles draait soepel'),
       sl3: sliderLabel(data.sl3, 'Algoritme', 'Server/netwerk'),
