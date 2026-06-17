@@ -1,0 +1,1496 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech DNA Test — NATIN ICT</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<style>
+:root {
+  --ao: #1B5FA8;
+  --ao-light: #E8F2FF;
+  --ao-mid: #4B8FD8;
+  --ib: #0D7B5A;
+  --ib-light: #E3F8F0;
+  --ib-mid: #3DAB85;
+  --neutral: #1A1A1A;
+  --muted: #666;
+  --subtle: #999;
+  --border: #E5E3DB;
+  --bg: #F4F2EC;
+  --card: #FFFFFF;
+  --accent: #E8A022;
+  --accent-light: #FEF5E7;
+  --danger: #C0392B;
+  --danger-light: #FDEDEC;
+  --r: 14px;
+  --r-sm: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--neutral);
+  font-size: 15px;
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.header {
+  background: var(--neutral);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+.header-badge {
+  background: var(--accent);
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+.header-title {
+  font-size: 14px;
+  color: rgba(255,255,255,0.75);
+  font-weight: 400;
+}
+
+/* ── PROGRESS ── */
+.prog-bar-wrap {
+  background: var(--neutral);
+  padding: 0 24px 14px;
+}
+.prog-bar-bg {
+  height: 3px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.prog-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+.prog-steps {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 8px;
+}
+.prog-step {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  text-align: center;
+  flex: 1;
+  transition: color 0.2s;
+}
+.prog-step.active { color: var(--accent); font-weight: 600; }
+.prog-step.done { color: rgba(255,255,255,0.6); }
+
+/* ── MAIN ── */
+.main { max-width: 660px; margin: 0 auto; padding: 28px 20px 80px; }
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── HERO BANNERS ── */
+.hero {
+  border-radius: var(--r);
+  padding: 28px 24px 24px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.hero.intro { background: linear-gradient(135deg, #1A1A2E 0%, #16213E 60%, #0F3460 100%); color: #fff; }
+.hero.ao-hero { background: linear-gradient(135deg, #1B3A6B 0%, #1B5FA8 100%); color: #fff; }
+.hero.ib-hero { background: linear-gradient(135deg, #0A4A36 0%, #0D7B5A 100%); color: #fff; }
+.hero-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 6px;
+}
+.hero-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.hero-sub {
+  font-size: 14px;
+  opacity: 0.8;
+  line-height: 1.6;
+  max-width: 480px;
+}
+.hero-icon {
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 64px;
+  opacity: 0.12;
+  font-family: 'Material Icons Round';
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 22px 24px;
+  margin-bottom: 14px;
+}
+.card-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--neutral);
+  margin-bottom: 4px;
+}
+.card-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+.sec-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--subtle);
+  margin: 22px 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.sec-label .material-icons-round { font-size: 15px; }
+.sec-label:first-child { margin-top: 0; }
+.divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+/* ── COMPARE CARDS ── */
+.compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.cmp {
+  border-radius: var(--r-sm);
+  padding: 16px;
+  border: 1px solid;
+}
+.cmp.ao { background: var(--ao-light); border-color: #C2D9F5; }
+.cmp.ib { background: var(--ib-light); border-color: #A8DFCb; }
+.cmp-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cmp.ao .cmp-title { color: var(--ao); }
+.cmp.ib .cmp-title { color: var(--ib); }
+.cmp ul { padding-left: 16px; font-size: 13px; line-height: 1.7; }
+.cmp.ao ul { color: #1A4E8C; }
+.cmp.ib ul { color: #0A5C42; }
+
+/* ── DAY IN LIFE ── */
+.day-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 14px 0; }
+.day-card {
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.day-card-header {
+  padding: 10px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.day-card.ao .day-card-header { background: var(--ao); color: #fff; }
+.day-card.ib .day-card-header { background: var(--ib); color: #fff; }
+.day-card-body { padding: 12px 14px; background: var(--card); }
+.day-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--neutral);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.day-item:last-child { margin-bottom: 0; }
+.day-time {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--subtle);
+  min-width: 34px;
+  padding-top: 1px;
+}
+.day-item .material-icons-round { font-size: 14px; color: var(--muted); margin-top: 1px; flex-shrink: 0; }
+
+/* ── SLIDERS ── */
+.slider-item {
+  margin-bottom: 22px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+}
+.slider-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.slider-q {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--neutral);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+.slider-track-wrap { position: relative; padding: 0 2px; }
+input[type=range] {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 5px;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--ao-light) 0%, var(--border) 50%, var(--ib-light) 100%);
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 2px solid var(--neutral);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  cursor: grab;
+  transition: border-color 0.15s;
+}
+input[type=range]::-webkit-slider-thumb:active { cursor: grabbing; }
+.slider-poles {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-top: 8px;
+  gap: 10px;
+}
+.slider-poles .pole {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+  max-width: 46%;
+  line-height: 1.4;
+}
+.slider-poles .pole.left .material-icons-round { color: var(--ao); font-size: 14px; }
+.slider-poles .pole.right { text-align: right; flex-direction: row-reverse; }
+.slider-poles .pole.right .material-icons-round { color: var(--ib); font-size: 14px; }
+.slider-val {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 4px;
+  height: 16px;
+  transition: color 0.2s;
+}
+
+/* ── SCENARIOS ── */
+.scenario {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.scenario-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.scenario-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--neutral);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.scenario-context {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.scenario-q {
+  font-size: 14px;
+  color: var(--neutral);
+  font-style: italic;
+  margin-bottom: 12px;
+  line-height: 1.6;
+}
+.radio-opts { display: flex; flex-direction: column; gap: 8px; }
+.radio-opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--neutral);
+  cursor: pointer;
+  line-height: 1.5;
+  padding: 8px 10px;
+  border-radius: var(--r-sm);
+  border: 1px solid transparent;
+  transition: all 0.15s;
+}
+.radio-opt:hover { background: var(--bg); border-color: var(--border); }
+.radio-opt input { margin-top: 3px; accent-color: var(--ao); flex-shrink: 0; }
+
+/* ── OPEN QUESTIONS ── */
+.open-q {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.open-q-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--neutral);
+  margin-bottom: 10px;
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.open-q-label .material-icons-round { font-size: 18px; color: var(--accent); margin-top: 1px; flex-shrink: 0; }
+textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 10px 12px;
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--neutral);
+  background: var(--card);
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.6;
+  transition: border-color 0.15s;
+}
+textarea:focus { outline: none; border-color: var(--ao); }
+textarea::placeholder { color: var(--subtle); }
+
+/* ── FACT BOXES ── */
+.fact-pair { margin-bottom: 20px; }
+.fact-box {
+  border-radius: var(--r-sm);
+  padding: 14px 16px;
+  margin-bottom: 4px;
+  font-size: 13px;
+  line-height: 1.6;
+  display: flex;
+  gap: 10px;
+}
+.fact-box .fb-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+.fact-box-content {}
+.fact-box .fb-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.fact-box.myth { background: var(--danger-light); border: 1px solid #F5C0BC; }
+.fact-box.myth .fb-label { color: var(--danger); }
+.fact-box.myth .fb-icon { color: var(--danger); }
+.fact-box.myth .fb-body { color: #8B2320; }
+.fact-box.nuance { background: var(--accent-light); border: 1px solid #F5DFA0; }
+.fact-box.nuance .fb-label { color: #7A5000; }
+.fact-box.nuance .fb-icon { color: var(--accent); }
+.fact-box.nuance .fb-body { color: #6B4400; }
+.fact-box.fact { background: var(--ib-light); border: 1px solid #A8DFCb; }
+.fact-box.fact .fb-label { color: var(--ib); }
+.fact-box.fact .fb-icon { color: var(--ib); }
+.fact-box.fact .fb-body { color: #0A5C42; }
+.fact-box .fb-body ul { padding-left: 16px; margin-top: 4px; }
+.fact-box .fb-body li { margin-bottom: 3px; }
+
+/* Jargon tooltip */
+.jargon {
+  border-bottom: 1px dashed var(--ao);
+  color: var(--ao);
+  cursor: help;
+  font-weight: 500;
+  position: relative;
+}
+.jargon-tip {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--neutral);
+  color: #fff;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 100;
+  margin-bottom: 4px;
+  max-width: 240px;
+  white-space: normal;
+  text-align: center;
+}
+.jargon:hover .jargon-tip { display: block; }
+
+/* ── LIKERT ── */
+.likert-wrap { margin-bottom: 16px; }
+.likert-q { font-size: 14px; font-weight: 500; color: var(--neutral); margin-bottom: 10px; line-height: 1.5; }
+.likert-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.likert-btn {
+  padding: 10px 6px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  background: var(--card);
+  color: var(--muted);
+  cursor: pointer;
+  text-align: center;
+  line-height: 1.3;
+  transition: all 0.15s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.likert-btn .material-icons-round { font-size: 18px; }
+.likert-btn:hover { border-color: var(--ao-mid); background: var(--ao-light); }
+.likert-btn.sel { background: var(--ao-light); border-color: var(--ao); color: var(--ao); font-weight: 600; }
+
+/* ── INPUT FIELDS ── */
+input[type=text], select {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 11px 14px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--neutral);
+  background: var(--card);
+  transition: border-color 0.15s;
+  margin-top: 6px;
+}
+input[type=text]:focus, select:focus { outline: none; border-color: var(--ao); }
+.field-label { font-size: 13px; font-weight: 600; color: var(--neutral); margin-top: 14px; display: block; }
+.field-label:first-child { margin-top: 0; }
+
+/* ── DISCLAIMER ── */
+.disclaimer {
+  background: var(--accent-light);
+  border: 1px solid #F5DFA0;
+  border-radius: var(--r-sm);
+  padding: 12px 16px;
+  font-size: 12px;
+  color: #6B4400;
+  line-height: 1.6;
+  display: flex;
+  gap: 8px;
+}
+.disclaimer .material-icons-round { font-size: 16px; color: var(--accent); flex-shrink: 0; margin-top: 1px; }
+
+/* ── LOADING ── */
+.loading-wrap { text-align: center; padding: 36px 20px; }
+.dna-spin {
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--border);
+  border-top-color: var(--ao);
+  border-right-color: var(--ib);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+  margin: 0 auto 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 14px; color: var(--muted); }
+.loading-steps { margin-top: 12px; }
+.loading-step { font-size: 12px; color: var(--subtle); padding: 3px 0; }
+.loading-step.active-step { color: var(--ao); font-weight: 600; }
+
+/* ── PROFILE RESULT ── */
+.dna-card {
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-bottom: 16px;
+  border: 1px solid;
+}
+.dna-card.ao { border-color: #C2D9F5; }
+.dna-card.ib { border-color: #A8DFCb; }
+.dna-card.onduidelijk { border-color: var(--border); }
+.dna-header {
+  padding: 20px 24px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+.dna-card.ao .dna-header { background: var(--ao); }
+.dna-card.ib .dna-header { background: var(--ib); }
+.dna-card.onduidelijk .dna-header { background: var(--neutral); }
+.dna-header-icon { font-size: 36px; color: rgba(255,255,255,0.5); font-family: 'Material Icons Round'; margin-top: 2px; }
+.dna-header-text {}
+.dna-type-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-bottom: 4px; }
+.dna-type-name {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+}
+.dna-body { padding: 20px 24px; background: var(--card); }
+.dna-obs { font-size: 14px; color: var(--neutral); line-height: 1.75; }
+.dna-obs p { margin-bottom: 12px; }
+.dna-obs p:last-child { margin-bottom: 0; }
+.dna-q-wrap {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  background: var(--bg);
+}
+.dna-q-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--subtle);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.dna-q-label .material-icons-round { font-size: 14px; color: var(--accent); }
+.dna-q-text { font-size: 14px; color: var(--neutral); font-style: italic; line-height: 1.6; }
+
+/* ── CHOICE SCREEN ── */
+.choice-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.choice-opt {
+  border: 2px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 18px 10px 14px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.choice-opt:hover { border-color: var(--ao-mid); transform: translateY(-2px); }
+.choice-opt .material-icons-round { font-size: 32px; display: block; margin: 0 auto 8px; color: var(--muted); }
+.choice-opt .choice-name { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 700; }
+.choice-opt .choice-sub { font-size: 11px; color: var(--subtle); margin-top: 3px; }
+.choice-opt.sel-ao { border-color: var(--ao); background: var(--ao-light); }
+.choice-opt.sel-ao .material-icons-round { color: var(--ao); }
+.choice-opt.sel-ao .choice-name { color: var(--ao); }
+.choice-opt.sel-ib { border-color: var(--ib); background: var(--ib-light); }
+.choice-opt.sel-ib .material-icons-round { color: var(--ib); }
+.choice-opt.sel-ib .choice-name { color: var(--ib); }
+.choice-opt.sel-doubt { border-color: var(--accent); background: var(--accent-light); }
+.choice-opt.sel-doubt .material-icons-round { color: var(--accent); }
+.choice-opt.sel-doubt .choice-name { color: #7A5000; }
+
+/* ── SUCCESS ── */
+.success-wrap { text-align: center; padding: 10px 0; }
+.success-icon-wrap {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--ib-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  border: 2px solid var(--ib);
+}
+.success-icon-wrap .material-icons-round { font-size: 36px; color: var(--ib); }
+.success-title {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ib);
+  margin-bottom: 10px;
+}
+.success-sub { font-size: 14px; color: var(--muted); line-height: 1.7; max-width: 400px; margin: 0 auto; }
+
+/* ── XP BAR ── */
+.xp-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 24px;
+  background: rgba(255,255,255,0.05);
+}
+.xp-label { font-size: 11px; color: rgba(255,255,255,0.5); white-space: nowrap; }
+.xp-bg { flex: 1; height: 4px; background: rgba(255,255,255,0.12); border-radius: 2px; overflow: hidden; }
+.xp-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.5s ease; }
+.xp-pts { font-size: 11px; font-weight: 700; color: var(--accent); white-space: nowrap; }
+
+/* ── NAV ── */
+.nav-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+.btn {
+  padding: 11px 22px;
+  border-radius: var(--r-sm);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--neutral);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+.btn:hover { background: var(--bg); }
+.btn.primary { background: var(--neutral); color: #fff; border-color: var(--neutral); }
+.btn.primary:hover { background: #333; }
+.btn .material-icons-round { font-size: 16px; }
+
+/* ── GAS CONFIG ── */
+.gas-box {
+  background: #F0F4FF;
+  border: 1px solid #C2D9F5;
+  border-radius: var(--r-sm);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.gas-box label { font-size: 13px; font-weight: 600; color: var(--ao); display: block; margin-bottom: 6px; }
+.gas-box input {
+  font-size: 12px;
+  font-family: monospace;
+  color: var(--neutral);
+  border-color: #C2D9F5;
+}
+.gas-box .gas-note { font-size: 11px; color: var(--muted); margin-top: 6px; line-height: 1.5; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 520px) {
+  .compare-grid { grid-template-columns: 1fr; }
+  .day-cards { grid-template-columns: 1fr; }
+  .choice-grid { grid-template-columns: 1fr; }
+  .likert-row { grid-template-columns: repeat(2, 1fr); }
+  .main { padding: 20px 14px 60px; }
+  .card { padding: 18px 16px; }
+  .hero { padding: 22px 18px; }
+  .hero-title { font-size: 22px; }
+  .hero-icon { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-badge">NATIN ICT</div>
+  <div class="header-title">Tech DNA Test — Leerjaar 2</div>
+</div>
+
+<!-- XP + PROGRESS -->
+<div class="prog-bar-wrap">
+  <div class="xp-row">
+    <span class="xp-label">Voortgang</span>
+    <div class="xp-bg"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+    <span class="xp-pts" id="xpPts">0 / 6 stappen</span>
+  </div>
+  <div class="prog-steps">
+    <div class="prog-step active" id="ps1">Welkom</div>
+    <div class="prog-step" id="ps2">AO vs IB</div>
+    <div class="prog-step" id="ps3">Wie ben jij?</div>
+    <div class="prog-step" id="ps4">AI & jij</div>
+    <div class="prog-step" id="ps5">Jouw DNA</div>
+    <div class="prog-step" id="ps6">Keuze</div>
+  </div>
+</div>
+
+<div class="main">
+
+<!-- ══════════════════════════════════════════
+     SCHERM 1 — WELKOM
+═══════════════════════════════════════════ -->
+<div class="screen active" id="s1">
+  <div class="hero intro">
+    <div class="hero-label">NATIN ICT · Leerjaar 2</div>
+    <div class="hero-title">Wat is jouw Tech DNA?</div>
+    <div class="hero-sub">Je hebt de MBI-fase afgerond. Nu kies je: AO of IB. Deze test helpt je ontdekken welke richting écht bij jou past — niet bij je vriend of je broer.</div>
+    <span class="hero-icon material-icons-round">biotech</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Hoe werkt dit?</div>
+    <div class="card-sub">In 6 stappen ontdek je jouw ICT-profiel. Aan het einde maakt het systeem een persoonlijke reflectie op basis van jouw antwoorden. Duurt ongeveer 15–20 minuten.</div>
+
+    <div class="sec-label"><span class="material-icons-round">person</span> Jouw gegevens</div>
+
+    <span class="field-label">Naam</span>
+    <input type="text" id="studentName" placeholder="Voornaam en achternaam">
+
+    <span class="field-label">Klas</span>
+    <select id="studentKlas">
+      <option value="">— kies je klas —</option>
+      <option value="PT 3.06.11 (IB)">PT 3.06.11</option>
+      <option value="PT 3.06.21 (AO)">PT 3.06.21</option>
+    </select>
+
+    <div class="divider"></div>
+    <div class="disclaimer">
+      <span class="material-icons-round">info</span>
+      <div>Er zijn <strong>geen goede of foute antwoorden</strong>. Wees eerlijk — alleen dan helpt dit echt. Je voorlopige keuze aan het einde is <strong>niet definitief</strong>. De sessie met je docent is er juist voor om hierover te praten.</div>
+    </div>
+
+    <div class="gas-box" style="margin-top:14px; margin-bottom:0;">
+      <label>Script URL (van je docent)</label>
+      <input type="text" id="gasUrl" placeholder="https://script.google.com/macros/s/...">
+      <div class="gas-note">Vul de URL in die je docent heeft gedeeld. Zonder deze URL werkt de AI-analyse niet.</div>
+    </div>
+
+    <div class="nav-row" style="border-top:none; padding-top:0; margin-top:16px;">
+      <button class="btn primary" onclick="startTool()">
+        Start de test <span class="material-icons-round">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCHERM 2 — AO VS IB
+═══════════════════════════════════════════ -->
+<div class="screen" id="s2">
+  <div class="hero ao-hero">
+    <div class="hero-label">Stap 2 van 6</div>
+    <div class="hero-title">Twee richtingen, één wereld</div>
+    <div class="hero-sub">Lees goed. Dit is de basis voor alles wat daarna komt.</div>
+    <span class="hero-icon material-icons-round">compare_arrows</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Wat doet een AO-er vs. een IB-er?</div>
+    <div class="card-sub">Beide zijn ICT — maar de dagelijkse werkzaamheden zijn heel anders.</div>
+
+    <div class="compare-grid">
+      <div class="cmp ao">
+        <div class="cmp-title"><span class="material-icons-round" style="font-size:16px;">code</span> AO</div>
+        <ul>
+          <li>Software en apps bouwen</li>
+          <li>Programmeren (Python, Java)</li>
+          <li>Databases ontwerpen</li>
+          <li>Testen wat je bouwt</li>
+          <li>Praten met opdrachtgevers</li>
+        </ul>
+      </div>
+      <div class="cmp ib">
+        <div class="cmp-title"><span class="material-icons-round" style="font-size:16px;">router</span> IB</div>
+        <ul>
+          <li>Netwerken en servers beheren</li>
+          <li>Systemen installeren en instellen</li>
+          <li>Beveiliging bewaken</li>
+          <li>Storingen oplossen</li>
+          <li>Gebruikers ondersteunen</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="sec-label"><span class="material-icons-round">schedule</span> Een dag op stage</div>
+    <div class="day-cards">
+      <div class="day-card ao">
+        <div class="day-card-header"><span class="material-icons-round" style="font-size:14px;">code</span> AO-stagiair</div>
+        <div class="day-card-body">
+          <div class="day-item"><span class="day-time">08:00</span><span class="material-icons-round">group</span> Standup meeting met het team</div>
+          <div class="day-item"><span class="day-time">09:00</span><span class="material-icons-round">code</span> Nieuwe functionaliteit programmeren</div>
+          <div class="day-item"><span class="day-time">12:00</span><span class="material-icons-round">bug_report</span> Bug oplossen in bestaande code</div>
+          <div class="day-item"><span class="day-time">14:00</span><span class="material-icons-round">person</span> Demo aan opdrachtgever</div>
+          <div class="day-item"><span class="day-time">15:30</span><span class="material-icons-round">storage</span> Database aanpassen voor nieuwe feature</div>
+        </div>
+      </div>
+      <div class="day-card ib">
+        <div class="day-card-header"><span class="material-icons-round" style="font-size:14px;">router</span> IB-stagiair</div>
+        <div class="day-card-body">
+          <div class="day-item"><span class="day-time">08:00</span><span class="material-icons-round">monitor_heart</span> Netwerk checken op meldingen</div>
+          <div class="day-item"><span class="day-time">09:00</span><span class="material-icons-round">computer</span> Nieuwe computer installeren voor medewerker</div>
+          <div class="day-item"><span class="day-time">11:00</span><span class="material-icons-round">wifi_off</span> Netwerkstoring onderzoeken en oplossen</div>
+          <div class="day-item"><span class="day-time">14:00</span><span class="material-icons-round">security</span> Beveiligingsupdates uitrollen</div>
+          <div class="day-item"><span class="day-time">15:30</span><span class="material-icons-round">backup</span> Dagelijkse back-up controleren</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-label"><span class="material-icons-round">work</span> Na je diploma — functies in Suriname</div>
+    <div class="compare-grid">
+      <div class="cmp ao">
+        <div class="cmp-title"><span class="material-icons-round" style="font-size:16px;">code</span> AO functies</div>
+        <ul>
+          <li>Junior developer</li>
+          <li>Webbouwer / app-maker</li>
+          <li>Database-beheerder</li>
+          <li>Freelance programmeur</li>
+        </ul>
+      </div>
+      <div class="cmp ib">
+        <div class="cmp-title"><span class="material-icons-round" style="font-size:16px;">router</span> IB functies</div>
+        <ul>
+          <li>ICT-beheerder (overheid/bedrijf)</li>
+          <li>Netwerktechnicus</li>
+          <li>Systeembeheerder</li>
+          <li>Security-medewerker</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      <span class="material-icons-round">info</span>
+      <div><strong>Surinaamse markt:</strong> Digitalisering van de overheid, groei van de olie- en gassector en e-commerce creëren vraag naar zowel AO als IB. Er zijn geen harde cijfers over welke richting <em>meer</em> gevraagd wordt — laat dit geen doorslaggevende factor zijn in je keuze.</div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn" onclick="goTo(1)"><span class="material-icons-round">arrow_back</span> Terug</button>
+      <button class="btn primary" onclick="goTo(3)">Volgende <span class="material-icons-round">arrow_forward</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCHERM 3 — WIE BEN JIJ
+═══════════════════════════════════════════ -->
+<div class="screen" id="s3">
+  <div class="hero" style="background: linear-gradient(135deg, #2C1654 0%, #4A235A 100%); color:#fff;">
+    <div class="hero-label">Stap 3 van 6</div>
+    <div class="hero-title">Wie ben jij als ICT-er?</div>
+    <div class="hero-sub">Reageer op gevoel. Je eerste instinct is het eerlijkste antwoord.</div>
+    <span class="hero-icon material-icons-round">psychology</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Hoe werk jij het liefst?</div>
+    <div class="card-sub">Sleep elke schuif naar de kant die het beste bij jou past. Midden = echt geen voorkeur.</div>
+
+    <div class="slider-item">
+      <div class="slider-q">Als ik een ICT-probleem zie, wil ik het liefst…</div>
+      <input type="range" id="sl1" min="1" max="7" value="4" step="1" oninput="updateSlider('sl1','slv1','Bouwen','Repareren')">
+      <div class="slider-poles">
+        <div class="pole left"><span class="material-icons-round">construction</span> iets nieuws <em>bouwen</em></div>
+        <div class="pole right">het bestaande <em>repareren</em> <span class="material-icons-round">build</span></div>
+      </div>
+      <div class="slider-val" id="slv1" style="color:var(--subtle);">— geen voorkeur —</div>
+    </div>
+
+    <div class="slider-item">
+      <div class="slider-q">Na een dag goed werk wil ik kunnen zeggen…</div>
+      <input type="range" id="sl2" min="1" max="7" value="4" step="1" oninput="updateSlider('sl2','slv2','Ik heb iets gemaakt','Alles draait soepel')">
+      <div class="slider-poles">
+        <div class="pole left"><span class="material-icons-round">celebration</span> "Ik heb iets <em>gemaakt</em>"</div>
+        <div class="pole right">"Alles draait <em>soepel</em>" <span class="material-icons-round">check_circle</span></div>
+      </div>
+      <div class="slider-val" id="slv2" style="color:var(--subtle);">— geen voorkeur —</div>
+    </div>
+
+    <div class="slider-item">
+      <div class="slider-q">Ik word het meest enthousiast als ik…</div>
+      <input type="range" id="sl3" min="1" max="7" value="4" step="1" oninput="updateSlider('sl3','slv3','Algoritme uitwerk','Server induik')">
+      <div class="slider-poles">
+        <div class="pole left"><span class="material-icons-round">functions</span> een <em>algoritme</em> stap voor stap uitwerk</div>
+        <div class="pole right">een server of netwerk technisch induik <span class="material-icons-round">dns</span></div>
+      </div>
+      <div class="slider-val" id="slv3" style="color:var(--subtle);">— geen voorkeur —</div>
+    </div>
+
+    <div class="slider-item">
+      <div class="slider-q">Bij groepswerk ben ik het liefst degene die…</div>
+      <input type="range" id="sl4" min="1" max="7" value="4" step="1" oninput="updateSlider('sl4','slv4','Product bouwt','Omgeving beheert')">
+      <div class="slider-poles">
+        <div class="pole left"><span class="material-icons-round">draw</span> het eindproduct <em>ontwerpt en bouwt</em></div>
+        <div class="pole right">de technische omgeving <em>beheert</em> <span class="material-icons-round">settings</span></div>
+      </div>
+      <div class="slider-val" id="slv4" style="color:var(--subtle);">— geen voorkeur —</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Drie scenario's</div>
+    <div class="card-sub">Kies bij elk scenario de reactie die het meest bij jou past. Ook als geen enkele optie perfect is — kies de dichtstbijzijnde.</div>
+
+    <div class="scenario">
+      <div class="scenario-header">
+        <div class="scenario-num">1</div>
+        <div class="scenario-context">Surinaams bedrijf · dag 1 stage</div>
+      </div>
+      <div class="scenario-q">Je stagebegeleider zegt: "De kassaapp van ons bedrijf loopt vast bij drukte — klanten klagen." Wat doe jij als eerste?</div>
+      <div class="radio-opts">
+        <label class="radio-opt"><input type="radio" name="sc1" value="ao1"> Ik wil de broncode van de app bekijken en zoeken waar het probleem zit</label>
+        <label class="radio-opt"><input type="radio" name="sc1" value="ib1"> Ik wil kijken hoe zwaar de server belast is op het moment van de storing</label>
+        <label class="radio-opt"><input type="radio" name="sc1" value="ao2"> Ik wil eerst de medewerkers interviewen — hoe gebruiken ze de app precies?</label>
+        <label class="radio-opt"><input type="radio" name="sc1" value="x1"> Ik heb meer informatie nodig — ik kan nog geen keuze maken</label>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <div class="scenario-header">
+        <div class="scenario-num">2</div>
+        <div class="scenario-context">Stageplaats kiezen</div>
+      </div>
+      <div class="scenario-q">Je mag zelf kiezen. Optie A: je bouwt een voorraadsysteem voor een Surinaams bedrijf. Optie B: je zorgt dat het netwerk van alle filialen stabiel en veilig blijft. Wat kies je?</div>
+      <div class="radio-opts">
+        <label class="radio-opt"><input type="radio" name="sc2" value="ao"> Optie A — ik wil een product zien dat ík heb gebouwd</label>
+        <label class="radio-opt"><input type="radio" name="sc2" value="ib"> Optie B — ik wil dat de infrastructuur op orde is</label>
+        <label class="radio-opt"><input type="radio" name="sc2" value="x"> Ik twijfel — allebei klinkt goed</label>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <div class="scenario-header">
+        <div class="scenario-num">3</div>
+        <div class="scenario-context">Avond thuis</div>
+      </div>
+      <div class="scenario-q">Een vriend belt: zijn laptop is gehackt en hij heeft morgen een presentatie. Wat trekt jou meer aan om te doen?</div>
+      <div class="radio-opts">
+        <label class="radio-opt"><input type="radio" name="sc3" value="ib1"> Uitzoeken hoe de hacker binnenkwam en het systeem dichtzetten</label>
+        <label class="radio-opt"><input type="radio" name="sc3" value="ao1"> Een script schrijven dat verdachte activiteit in de toekomst signaleert</label>
+        <label class="radio-opt"><input type="radio" name="sc3" value="x1"> Eerlijk gezegd… ik zou gewoon Google openen en een tutorial volgen</label>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Jouw drijfveer</div>
+    <div class="card-sub">Neem even de tijd. Dit zijn de vragen waar het echt om gaat.</div>
+
+    <div class="open-q">
+      <div class="open-q-label"><span class="material-icons-round">favorite</span> Waarom heb je überhaupt voor ICT gekozen? Wat trok je er in het begin bij aan?</div>
+      <textarea id="open1" placeholder="Schrijf hier je antwoord..."></textarea>
+    </div>
+    <div class="open-q">
+      <div class="open-q-label"><span class="material-icons-round">explore</span> Stel: je hebt je diploma. Een vriend vraagt: "Wat doe jij straks voor werk?" Wat antwoord jij?</div>
+      <textarea id="open2" placeholder="Schrijf hier je antwoord — ook als je het nog niet zeker weet..."></textarea>
+    </div>
+    <div class="open-q">
+      <div class="open-q-label"><span class="material-icons-round">star</span> Wat vond je het leukste vak of moment in de MBI-fase? Waarom juist dat?</div>
+      <textarea id="open3" placeholder="Schrijf hier je antwoord..."></textarea>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn" onclick="goTo(2)"><span class="material-icons-round">arrow_back</span> Terug</button>
+      <button class="btn primary" onclick="goTo(4)">Volgende <span class="material-icons-round">arrow_forward</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCHERM 4 — AI & JIJ
+═══════════════════════════════════════════ -->
+<div class="screen" id="s4">
+  <div class="hero" style="background: linear-gradient(135deg, #0A1628 0%, #1A2A4A 100%); color:#fff;">
+    <div class="hero-label">Stap 4 van 6</div>
+    <div class="hero-title">AI en jouw toekomst</div>
+    <div class="hero-sub">Veel studenten kiezen op basis van angst voor AI. Lees eerst de feiten — dan beslis je.</div>
+    <span class="hero-icon material-icons-round">smart_toy</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Wat hoor je overal?</div>
+    <div class="card-sub">En wat zegt het onderzoek daar echt over?</div>
+
+    <div class="fact-pair">
+      <div class="fact-box myth">
+        <span class="material-icons-round fb-icon">chat_bubble</span>
+        <div class="fact-box-content">
+          <div class="fb-label">Veelgehoord over AO</div>
+          <div class="fb-body">"AO heeft geen toekomst. AI schrijft straks alle code — dan heb je niks meer te doen als developer."</div>
+        </div>
+      </div>
+      <div class="fact-box nuance">
+        <span class="material-icons-round fb-icon">warning</span>
+        <div class="fact-box-content">
+          <div class="fb-label">Deels waar</div>
+          <div class="fb-body">
+            <span class="jargon">Boilerplate-code<span class="jargon-tip">Standaard herhalende code die je bij elk project nodig hebt maar niet zelf hoeft te bedenken — zoals een login-pagina of databaseverbinding</span></span> en simpele scripts worden inderdaad steeds meer door AI gedaan. In de VS daalde de werkgelegenheid voor junior programmeurs die <em>alleen</em> kunnen kopiëren meetbaar. Dat is een reëel signaal.
+          </div>
+        </div>
+      </div>
+      <div class="fact-box fact">
+        <span class="material-icons-round fb-icon">verified</span>
+        <div class="fact-box-content">
+          <div class="fb-label">Wat onderzoek ook zegt (WEF, Stack Overflow, Morgan Stanley 2025–2026)</div>
+          <div class="fb-body">
+            <ul>
+              <li>4 op de 10 developers zeggen dat AI hun <em>carrièrekansen vergroot</em> heeft</li>
+              <li>De vraag naar software developers groeit wereldwijd nog steeds — +17% tot 2033</li>
+              <li>AI doet de saaie taken. <em>Wie bepaalt wát er gebouwd wordt?</em> Nog steeds een mens</li>
+              <li>Wie leert <em>samenwerken</em> met AI is sterker — niet zwakker</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fact-pair">
+      <div class="fact-box myth">
+        <span class="material-icons-round fb-icon">chat_bubble</span>
+        <div class="fact-box-content">
+          <div class="fb-label">Veelgehoord over IB</div>
+          <div class="fb-body">"IB is veiliger. Netwerken kan AI toch niet overnemen?"</div>
+        </div>
+      </div>
+      <div class="fact-box nuance">
+        <span class="material-icons-round fb-icon">warning</span>
+        <div class="fact-box-content">
+          <div class="fb-label">Ook hier: deels waar</div>
+          <div class="fb-body">AI beheert al automatisch <span class="jargon">cloudinfrastructuur<span class="jargon-tip">Servers en netwerken die je via het internet beheert in plaats van fysiek op locatie — zoals AWS, Azure of Google Cloud</span></span> bij grote providers. Standaard configuratiewerk verandert. Simpele helpdesktaken worden geraakt.
+          </div>
+        </div>
+      </div>
+      <div class="fact-box fact">
+        <span class="material-icons-round fb-icon">verified</span>
+        <div class="fact-box-content">
+          <div class="fb-label">Wat onderzoek ook zegt</div>
+          <div class="fb-body">
+            <ul>
+              <li><span class="jargon">Cybersecurity<span class="jargon-tip">Het beschermen van netwerken, systemen en data tegen aanvallen van buitenaf</span></span> en incident response groeien juist</li>
+              <li>Menselijk oordeel bij storingen blijft essentieel</li>
+              <li>In Suriname (olie- &amp; gassector, overheidsdigitalisering) is lokale IB-kennis strategisch</li>
+              <li>Ook IB-ers die AI-tools negeren verliezen terrein</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="disclaimer" style="margin-bottom:20px;">
+      <span class="material-icons-round">info</span>
+      <div>Bovenstaande info is gebaseerd op internationaal onderzoek en Surinaams beleid (ICT Associatie Suriname 2026–2028). Er zijn <strong>geen harde Surinaamse cijfers</strong> per richting beschikbaar. Gebruik dit als context, niet als garantie.</div>
+    </div>
+
+    <div class="sec-label"><span class="material-icons-round">reply</span> Jouw reactie</div>
+
+    <div class="likert-wrap">
+      <div class="likert-q">In hoeverre speelt angst voor AI een rol in jouw keuze voor AO of IB?</div>
+      <div class="likert-row">
+        <button class="likert-btn" onclick="setLikert('l1',this,'Helemaal niet')">
+          <span class="material-icons-round">sentiment_very_satisfied</span>Helemaal niet
+        </button>
+        <button class="likert-btn" onclick="setLikert('l1',this,'Een beetje')">
+          <span class="material-icons-round">sentiment_neutral</span>Een beetje
+        </button>
+        <button class="likert-btn" onclick="setLikert('l1',this,'Behoorlijk')">
+          <span class="material-icons-round">sentiment_dissatisfied</span>Behoorlijk
+        </button>
+        <button class="likert-btn" onclick="setLikert('l1',this,'Heel sterk')">
+          <span class="material-icons-round">sentiment_very_dissatisfied</span>Heel sterk
+        </button>
+      </div>
+      <input type="hidden" id="l1" value="">
+    </div>
+
+    <div class="open-q">
+      <div class="open-q-label"><span class="material-icons-round">lightbulb</span> Na het lezen hierboven — verandert dat iets aan hoe jij naar de keuze kijkt? Waarom wel of niet?</div>
+      <textarea id="open4" placeholder="Schrijf hier je gedachten..."></textarea>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn" onclick="goTo(3)"><span class="material-icons-round">arrow_back</span> Terug</button>
+      <button class="btn primary" onclick="startAnalyse()">Analyseer mijn Tech DNA <span class="material-icons-round">biotech</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCHERM 5 — JOUW DNA (AI RESULT)
+═══════════════════════════════════════════ -->
+<div class="screen" id="s5">
+  <div class="hero" style="background: linear-gradient(135deg, #1A1428 0%, #2D2042 100%); color:#fff;">
+    <div class="hero-label">Stap 5 van 6</div>
+    <div class="hero-title">Jouw Tech DNA</div>
+    <div class="hero-sub">Het systeem heeft jouw antwoorden geanalyseerd. Dit is geen oordeel — het is een spiegel.</div>
+    <span class="hero-icon material-icons-round">fingerprint</span>
+  </div>
+
+  <div class="card">
+    <div id="profileLoading" class="loading-wrap">
+      <div class="dna-spin"></div>
+      <div class="loading-text">Jouw Tech DNA wordt geanalyseerd…</div>
+      <div class="loading-steps">
+        <div class="loading-step active-step" id="ls1">Schuifjes en scenario's verwerken…</div>
+        <div class="loading-step" id="ls2">Open antwoorden lezen…</div>
+        <div class="loading-step" id="ls3">Profiel opstellen…</div>
+      </div>
+    </div>
+
+    <div id="profileResult" style="display:none;">
+      <div id="dnaCard" class="dna-card onduidelijk">
+        <div class="dna-header" id="dnaHeader">
+          <span class="dna-header-icon material-icons-round" id="dnaIcon">fingerprint</span>
+          <div class="dna-header-text">
+            <div class="dna-type-label" id="dnaLabel">Jouw profiel</div>
+            <div class="dna-type-name" id="dnaName">—</div>
+          </div>
+        </div>
+        <div class="dna-body">
+          <div class="dna-obs" id="dnaObs"></div>
+          <div class="dna-q-wrap">
+            <div class="dna-q-label"><span class="material-icons-round">forum</span> Neem deze vraag mee naar de sessie</div>
+            <div class="dna-q-text" id="dnaQ">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="disclaimer">
+        <span class="material-icons-round">smart_toy</span>
+        <div>Dit profiel is gegenereerd door AI op basis van jouw antwoorden. Het systeem kent jou niet persoonlijk en kan zich vergissen. Gebruik het als gespreksmateriaal voor de sessie met je docent — niet als definitief antwoord.</div>
+      </div>
+    </div>
+
+    <div id="profileError" style="display:none;">
+      <div class="fact-box nuance">
+        <span class="material-icons-round fb-icon">warning</span>
+        <div class="fact-box-content">
+          <div class="fb-label">Analyse niet beschikbaar</div>
+          <div class="fb-body" id="errorMsg">De AI-analyse kon niet worden uitgevoerd. Ga toch verder — je docent bespreekt jouw antwoorden in de sessie.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-row" id="s5nav" style="display:none;">
+      <button class="btn" onclick="goTo(4)"><span class="material-icons-round">arrow_back</span> Terug</button>
+      <button class="btn primary" onclick="goTo(6)">Naar mijn keuze <span class="material-icons-round">arrow_forward</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCHERM 6 — KEUZE
+═══════════════════════════════════════════ -->
+<div class="screen" id="s6">
+  <div class="hero" style="background: linear-gradient(135deg, #1A3A1A 0%, #1B5FA8 50%, #0D7B5A 100%); color:#fff;">
+    <div class="hero-label">Stap 6 van 6</div>
+    <div class="hero-title">Jouw voorlopige keuze</div>
+    <div class="hero-sub">Dit is <strong>niet definitief</strong>. De sessie is er voor om hierover te praten. Maar je hebt nu genoeg nagedacht om een eerste richting te geven.</div>
+    <span class="hero-icon material-icons-round">flag</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Ik neig naar…</div>
+    <div class="card-sub">Kies de optie die op dit moment het best bij jou past.</div>
+
+    <div class="choice-grid">
+      <div class="choice-opt" id="choAO" onclick="setChoice('ao')">
+        <span class="material-icons-round">code</span>
+        <div class="choice-name">AO</div>
+        <div class="choice-sub">Applicatieontwikkeling</div>
+      </div>
+      <div class="choice-opt" id="choIB" onclick="setChoice('ib')">
+        <span class="material-icons-round">router</span>
+        <div class="choice-name">IB</div>
+        <div class="choice-sub">Systeem- en Netwerkbeheer</div>
+      </div>
+      <div class="choice-opt" id="choDOUBT" onclick="setChoice('doubt')">
+        <span class="material-icons-round">help_outline</span>
+        <div class="choice-name">Ik twijfel</div>
+        <div class="choice-sub">nog niet zeker</div>
+      </div>
+    </div>
+
+    <div class="open-q">
+      <div class="open-q-label"><span class="material-icons-round">edit</span> Schrijf je motivatie of de reden van je twijfel. Wees eerlijk — dit helpt je docent de sessie goed voor te bereiden.</div>
+      <textarea id="finalMotivation" placeholder="Mijn motivatie / twijfel is..."></textarea>
+    </div>
+
+    <div class="disclaimer">
+      <span class="material-icons-round">send</span>
+      <div>Door op "Verstuur" te klikken stuur je al jouw antwoorden — inclusief je naam, klas, schuifjes, scenario's, open vragen en AI-profiel — naar je docent.</div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn" onclick="goTo(5)"><span class="material-icons-round">arrow_back</span> Terug</button>
+      <button class="btn primary" onclick="submitForm()">Verstuur naar docent <span class="material-icons-round">send</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCHERM 7 — SUCCESS
+═══════════════════════════════════════════ -->
+<div class="screen" id="s7">
+  <div class="card">
+    <div class="success-wrap">
+      <div class="success-icon-wrap">
+        <span class="material-icons-round">check_circle</span>
+      </div>
+      <div class="success-title">Verstuurd!</div>
+      <div class="success-sub">
+        Jouw antwoorden zijn ontvangen door je docent. Ze worden gebruikt tijdens de keuzesessie.<br><br>
+        Denk ondertussen rustig verder na — je mag altijd van mening veranderen. Dat is precies waarvoor de sessie er is.
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+let currentScreen = 1;
+let finalChoice = '';
+let profileData = null;
+let GAS_URL = '';
+
+const STEPS = ['','Welkom','AO vs IB','Wie ben jij?','AI & jij','Jouw DNA','Keuze'];
+
+function startTool() {
+  const name = document.getElementById('studentName').value.trim();
+  const klas = document.getElementById('studentKlas').value;
+  GAS_URL = document.getElementById('gasUrl').value.trim();
+  if (!name) { alert('Vul je naam in om verder te gaan.'); return; }
+  if (!klas) { alert('Kies je klas om verder te gaan.'); return; }
+  goTo(2);
+}
+
+function goTo(n) {
+  document.getElementById('s' + currentScreen).classList.remove('active');
+  const oldPS = document.getElementById('ps' + currentScreen);
+  if (oldPS) { oldPS.classList.remove('active'); if (currentScreen < n) oldPS.classList.add('done'); }
+  currentScreen = n;
+  document.getElementById('s' + n).classList.add('active');
+  const newPS = document.getElementById('ps' + n);
+  if (newPS) newPS.classList.add('active');
+  const pct = Math.round(((n - 1) / 6) * 100);
+  document.getElementById('xpFill').style.width = pct + '%';
+  document.getElementById('xpPts').textContent = (n - 1) + ' / 6 stappen';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function updateSlider(id, valId, leftLabel, rightLabel) {
+  const v = parseInt(document.getElementById(id).value);
+  const el = document.getElementById(valId);
+  if (v <= 2) { el.textContent = '← ' + leftLabel; el.style.color = 'var(--ao)'; }
+  else if (v >= 6) { el.textContent = rightLabel + ' →'; el.style.color = 'var(--ib)'; }
+  else if (v === 3) { el.textContent = 'Licht naar: ' + leftLabel; el.style.color = 'var(--ao-mid)'; }
+  else if (v === 5) { el.textContent = 'Licht naar: ' + rightLabel; el.style.color = 'var(--ib-mid)'; }
+  else { el.textContent = '— geen voorkeur —'; el.style.color = 'var(--subtle)'; }
+}
+
+function setLikert(id, btn, val) {
+  document.getElementById(id).value = val;
+  btn.closest('.likert-row').querySelectorAll('.likert-btn').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+
+function setChoice(val) {
+  finalChoice = val;
+  ['choAO','choIB','choDOUBT'].forEach(id => {
+    document.getElementById(id).classList.remove('sel-ao','sel-ib','sel-doubt');
+  });
+  if (val === 'ao') document.getElementById('choAO').classList.add('sel-ao');
+  if (val === 'ib') document.getElementById('choIB').classList.add('sel-ib');
+  if (val === 'doubt') document.getElementById('choDOUBT').classList.add('sel-doubt');
+}
+
+function collectData() {
+  const slLabels = [
+    ['Bouwen vs. repareren', ['Bouwen','Neutraal','Repareren']],
+    ['Maken vs. beheren', ['Iets gemaakt','Neutraal','Alles draait soepel']],
+    ['Algoritme vs. server', ['Algoritme/logica','Neutraal','Server/netwerk']],
+    ['Product vs. omgeving', ['Product bouwen','Neutraal','Omgeving bewaken']],
+  ];
+  const slSummary = slLabels.map(([label, cats], i) => {
+    const v = parseInt(document.getElementById('sl' + (i+1)).value);
+    const cat = v <= 2 ? cats[0] : v >= 6 ? cats[2] : v === 4 ? cats[1] : v < 4 ? 'licht naar ' + cats[0] : 'licht naar ' + cats[2];
+    return label + ': ' + v + '/7 (' + cat + ')';
+  }).join('\n');
+  return {
+    naam: document.getElementById('studentName').value,
+    klas: document.getElementById('studentKlas').value,
+    sl1: document.getElementById('sl1').value,
+    sl2: document.getElementById('sl2').value,
+    sl3: document.getElementById('sl3').value,
+    sl4: document.getElementById('sl4').value,
+    sc1: document.querySelector('input[name=sc1]:checked')?.value || 'niet beantwoord',
+    sc2: document.querySelector('input[name=sc2]:checked')?.value || 'niet beantwoord',
+    sc3: document.querySelector('input[name=sc3]:checked')?.value || 'niet beantwoord',
+    open1: document.getElementById('open1').value || '(leeg)',
+    open2: document.getElementById('open2').value || '(leeg)',
+    open3: document.getElementById('open3').value || '(leeg)',
+    open4: document.getElementById('open4').value || '(leeg)',
+    aiAngst: document.getElementById('l1').value || 'niet ingevuld',
+    slSummary
+  };
+}
+
+function animateLoadingSteps() {
+  const steps = ['ls1','ls2','ls3'];
+  let i = 0;
+  return setInterval(() => {
+    steps.forEach(s => document.getElementById(s).classList.remove('active-step'));
+    if (i < steps.length) document.getElementById(steps[i]).classList.add('active-step');
+    i++;
+  }, 1200);
+}
+
+async function startAnalyse() {
+  goTo(5);
+  document.getElementById('profileLoading').style.display = 'block';
+  document.getElementById('profileResult').style.display = 'none';
+  document.getElementById('profileError').style.display = 'none';
+  document.getElementById('s5nav').style.display = 'none';
+
+  const stepTimer = animateLoadingSteps();
+  const data = collectData();
+
+  const systemPrompt = `Je bent een loopbaanbegeleidingsassistent voor MBO ICT-studenten aan het NATIN in Suriname. Een tweedejaarsstudent heeft een reflectietool ingevuld om te kiezen tussen AO (Applicatieontwikkeling) en IB (Systeem- en Netwerkbeheer).
+
+Analyseer de antwoorden en geef een persoonlijke reflectie in het Nederlands op B1-niveau. Wees warm, specifiek en eerlijk — verwijs direct naar wat de student heeft geschreven. Geef het profiel een karakternaam (bijv. "De Bouwer", "De Wachter", "De Verkenner", "De Architect", "De Probleemoplosser" etc.).
+
+Geef je antwoord UITSLUITEND als geldig JSON zonder markdown-opmaak:
+{"richting":"ao"|"ib"|"onduidelijk","karakternaam":"naam","kop":"korte zin max 12 woorden","observaties":"2-3 alineas van elk 2-3 zinnen. Verwijs specifiek naar antwoorden. Benoem ook twijfels of tegenstrijdigheden. Warm maar direct.","sessievraag":"één gerichte open vraag gebaseerd op de kern van hun twijfel of interessantste punt"}`;
+
+  const userContent = `STUDENT: ${data.naam} | KLAS: ${data.klas}
+
+SCHUIFREGELAARS:
+${data.slSummary}
+
+SCENARIO'S:
+1 (kassaapp): ${data.sc1}
+2 (stageplaats): ${data.sc2}
+3 (gehackte laptop): ${data.sc3}
+
+OPEN VRAGEN:
+Waarom ICT: "${data.open1}"
+Toekomstbeeld: "${data.open2}"
+Leukste MBI-moment: "${data.open3}"
+
+AI-SECTIE:
+Angst voor AI als keuzedriver: ${data.aiAngst}
+Reactie na AI-info: "${data.open4}"`;
+
+  try {
+    let responseText = '';
+
+    if (GAS_URL) {
+      const resp = await fetch(GAS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'analyse', system: systemPrompt, userContent })
+      });
+      const json = await resp.json();
+      responseText = json.text || '';
+    } else {
+      // Direct Anthropic API (werkt alleen vanuit claude.ai artifacts)
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1000,
+          system: systemPrompt,
+          messages: [{ role: 'user', content: userContent }]
+        })
+      });
+      const json = await resp.json();
+      responseText = json.content?.[0]?.text || '';
+    }
+
+    clearInterval(stepTimer);
+
+    const clean = responseText.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+    profileData = parsed;
+
+    // Render
+    const card = document.getElementById('dnaCard');
+    const icons = { ao: 'code', ib: 'router', onduidelijk: 'explore' };
+    const labels = { ao: 'AO-profiel', ib: 'IB-profiel', onduidelijk: 'Nog niet duidelijk' };
+    card.className = 'dna-card ' + (parsed.richting || 'onduidelijk');
+    document.getElementById('dnaIcon').textContent = icons[parsed.richting] || 'fingerprint';
+    document.getElementById('dnaLabel').textContent = labels[parsed.richting] || 'Profiel';
+    document.getElementById('dnaName').textContent = parsed.karakternaam || parsed.kop;
+
+    const obsHtml = (parsed.observaties || '').split('\n\n').map(p => '<p>' + p + '</p>').join('');
+    document.getElementById('dnaObs').innerHTML = '<p><strong>' + (parsed.kop || '') + '</strong></p>' + obsHtml;
+    document.getElementById('dnaQ').textContent = parsed.sessievraag || '—';
+
+    document.getElementById('profileLoading').style.display = 'none';
+    document.getElementById('profileResult').style.display = 'block';
+    document.getElementById('s5nav').style.display = 'flex';
+
+  } catch(err) {
+    clearInterval(stepTimer);
+    document.getElementById('profileLoading').style.display = 'none';
+    document.getElementById('profileError').style.display = 'block';
+    document.getElementById('errorMsg').textContent = 'De analyse kon niet worden uitgevoerd (' + err.message + '). Ga toch verder — je docent bespreekt jouw antwoorden in de sessie.';
+    document.getElementById('s5nav').style.display = 'flex';
+  }
+}
+
+async function submitForm() {
+  const data = collectData();
+  const choiceLabel = { ao: 'AO (Applicatieontwikkeling)', ib: 'IB (Systeem- en Netwerkbeheer)', doubt: 'Twijfel', '': 'Geen keuze gemaakt' }[finalChoice] || 'Geen keuze';
+
+  const payload = {
+    type: 'submit',
+    data: {
+      ...data,
+      profileRichting: profileData?.richting || '',
+      profileKarakternaam: profileData?.karakternaam || '',
+      profileKop: profileData?.kop || '',
+      profileObs: profileData?.observaties || '',
+      profileQ: profileData?.sessievraag || '',
+      keuze: finalChoice,
+      motivatie: document.getElementById('finalMotivation').value
+    }
+  };
+
+  if (GAS_URL) {
+    try {
+      await fetch(GAS_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch(e) { console.warn('Submit error:', e); }
+  } else {
+    // Fallback: mailto
+    const sub = encodeURIComponent('Tech DNA Test — ' + data.naam);
+    const body = encodeURIComponent(
+      'NAAM: ' + data.naam + '\nKLAS: ' + data.klas +
+      '\nKEUZE: ' + choiceLabel +
+      '\nPROFIEL: ' + (profileData?.karakternaam || 'n.v.t.') +
+      '\nMOTIVATIE: ' + document.getElementById('finalMotivation').value
+    );
+    window.location.href = 'mailto:?subject=' + sub + '&body=' + body;
+  }
+
+  goTo(7);
+}
+</script>
+</body>
+</html>
