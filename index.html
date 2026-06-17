@@ -1249,8 +1249,13 @@ input[type=text]:focus, select:focus { outline: none; border-color: var(--ao); }
       </div>
       <div class="success-title">Verstuurd!</div>
       <div class="success-sub">
-        Jouw antwoorden zijn ontvangen door je docent. Ze worden gebruikt tijdens de keuzesessie.<br><br>
-        Denk ondertussen rustig verder na — je mag altijd van mening veranderen. Dat is precies waarvoor de sessie er is.
+        Jouw antwoorden zijn ontvangen door je docent. Ze worden gebruikt tijdens de keuzesessie.
+      </div>
+      <div style="margin-top:16px; background:var(--ib-light); border:1px solid var(--ib-mid); border-radius:var(--radius-sm); padding:14px 16px; display:flex; align-items:flex-start; gap:10px; text-align:left;">
+        <span class="material-icons-round" style="color:var(--ib); font-size:20px; flex-shrink:0; margin-top:1px;">mail</span>
+        <div style="font-size:14px; color:#0A5C42; line-height:1.6;"><strong>Check je inbox!</strong> Je ontvangt zo dadelijk een e-mail met jouw persoonlijke Tech DNA-profiel. Bewaar die e-mail — je kunt hem gebruiken tijdens de sessie.</div>
+      </div>
+      <div style="margin-top:12px; font-size:13px; color:var(--muted); line-height:1.6;">Denk ondertussen rustig verder na over je keuze. Je mag altijd van gedachten veranderen.
       </div>
     </div>
   </div>
@@ -1424,7 +1429,7 @@ function animateLoadingSteps() {
     try {
       // Stuur naar GAS via GET — GAS roept Claude server-side aan
       const params = new URLSearchParams({ type: 'analyse', content: userContent });
-      const url = GAS_URL + '?' + params.toString().substring(0, 2048);
+      const url = GAS_URL + '?' + params.toString();
       const resp = await fetch(url, { method: 'GET', mode: 'cors', redirect: 'follow' });
       clearInterval(stepTimer);
 
@@ -1451,9 +1456,10 @@ function animateLoadingSteps() {
       document.getElementById('dnaIcon').textContent = icons[parsed.richting] || 'fingerprint';
       document.getElementById('dnaLabel').textContent = labels[parsed.richting] || 'Profiel';
       document.getElementById('dnaName').textContent = parsed.karakternaam || parsed.kop;
+      document.getElementById('dnaName').style.fontSize = '26px';
 
       const obsHtml = (parsed.observaties || '').split('\n\n').map(p => '<p>' + p + '</p>').join('');
-      document.getElementById('dnaObs').innerHTML = '<p><strong>' + (parsed.kop || '') + '</strong></p>' + obsHtml;
+      document.getElementById('dnaObs').innerHTML = '<p style="font-size:15px; font-weight:500; color:var(--neutral); margin-bottom:12px; line-height:1.4;">' + (parsed.kop || '') + '</p>' + obsHtml;
       document.getElementById('dnaQ').textContent = parsed.sessievraag || '—';
 
       document.getElementById('profileLoading').style.display = 'none';
@@ -1489,16 +1495,16 @@ function animateLoadingSteps() {
       sc1: SC1_LABELS[data.sc1] || data.sc1 || '',
       sc2: SC2_LABELS[data.sc2] || data.sc2 || '',
       sc3: SC3_LABELS[data.sc3] || data.sc3 || '',
-      open1: data.open1.substring(0, 300),
-      open2: data.open2.substring(0, 300),
-      open3: data.open3.substring(0, 300),
-      open4: data.open4.substring(0, 300),
+      open1: data.open1.substring(0, 500),
+      open2: data.open2.substring(0, 500),
+      open3: data.open3.substring(0, 500),
+      open4: data.open4.substring(0, 500),
       aiAngst: data.aiAngst,
       profileRichting: profileData?.richting || '',
       profileKarakternaam: profileData?.karakternaam || '',
-      profileKop: (profileData?.kop || '').substring(0, 150),
-      profileObs: (profileData?.observaties || '').substring(0, 500),
-      profileQ: (profileData?.sessievraag || '').substring(0, 300),
+      profileKop: (profileData?.kop || '').substring(0, 300),
+      profileObs: (profileData?.observaties || '').substring(0, 2000),
+      profileQ: (profileData?.sessievraag || '').substring(0, 600),
       keuze: keuzeLabel,
       motivatie: motivatie.substring(0, 500)
     });
