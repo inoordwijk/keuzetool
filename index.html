@@ -1353,8 +1353,34 @@ function animateLoadingSteps() {
 }
 
   // ── API configuratie ──
-  const ANTHROPIC_API_KEY = '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';
-  const GAS_SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbxgUBD-Kmyy4a2sKlwFCts8l4S3A9VGma3DwDfmH8iYFyuuJmz-v9pvhEmF5TT1YfFzYA/exec';
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbxgUBD-Kmyy4a2sKlwFCts8l4S3A9VGma3DwDfmH8iYFyuuJmz-v9pvhEmF5TT1YfFzYA/exec';
+
+  // Leesbare labels voor scenario-antwoorden
+  const SC_LABELS = {
+    // Scenario 1: kassaapp
+    'ao1': 'Broncode bekijken (code-aanpak)',
+    'ib1': 'Serverbelasting controleren (infra-aanpak)',
+    'ao2': 'Gebruikers interviewen (gebruikers-aanpak)',
+    'x1':  'Meer info nodig / weet het niet',
+    // Scenario 2: stageplaats
+    'ao':  'Optie A — systeem bouwen (AO)',
+    'ib':  'Optie B — netwerk stabiel houden (IB)',
+    'x':   'Twijfel — allebei interessant',
+    // Scenario 3: gehackte laptop
+    'ib1': 'Hoe hacker binnenkwam onderzoeken (IB)',
+    'ao1': 'Script schrijven om toekomstige aanvallen te detecteren (AO)',
+    'x1':  'Google openen en tutorial volgen'
+  };
+
+  // Slider-waarden vertalen naar leesbare tekst
+  function sliderLabel(val, leftLabel, rightLabel) {
+    const v = parseInt(val);
+    if (v <= 2) return leftLabel + ' (sterk)';
+    if (v === 3) return leftLabel + ' (licht)';
+    if (v === 4) return 'Geen voorkeur';
+    if (v === 5) return rightLabel + ' (licht)';
+    return rightLabel + ' (sterk)';
+  }
 
   async function startAnalyse() {
     goTo(5);
@@ -1366,57 +1392,42 @@ function animateLoadingSteps() {
     const stepTimer = animateLoadingSteps();
     const data = collectData();
 
-    const systemPrompt = `Je bent een loopbaanbegeleidingsassistent voor MBO ICT-studenten aan het NATIN in Suriname. Een tweedejaarsstudent heeft een reflectietool ingevuld om te kiezen tussen AO (Applicatieontwikkeling) en IB (Systeem- en Netwerkbeheer).
+    // Bouw leesbare samenvatting voor GAS/Claude
+    const slSummary = [
+      'Iets nieuws bouwen vs. repareren: ' + sliderLabel(data.sl1, 'Bouwen', 'Repareren'),
+      'Iets gemaakt vs. alles draait soepel: ' + sliderLabel(data.sl2, 'Iets gemaakt', 'Alles draait soepel'),
+      'Algoritme uitwerken vs. server induiken: ' + sliderLabel(data.sl3, 'Algoritme', 'Server/netwerk'),
+      'Product bouwen vs. omgeving bewaken: ' + sliderLabel(data.sl4, 'Product bouwen', 'Omgeving bewaken'),
+    ].join(' | ');
 
-Analyseer de antwoorden en geef een persoonlijke reflectie in het Nederlands op B1-niveau. Wees warm, specifiek en eerlijk. Verwijs direct naar wat de student heeft geschreven. Geef het profiel een karakternaam zoals "De Bouwer", "De Wachter", "De Verkenner", "De Architect" of "De Probleemoplosser".
+    const sc1 = SC_LABELS[data.sc1] || data.sc1 || 'niet beantwoord';
+    const sc2 = SC_LABELS[data.sc2] || data.sc2 || 'niet beantwoord';
+    const sc3 = SC_LABELS[data.sc3] || data.sc3 || 'niet beantwoord';
 
-Geef je antwoord UITSLUITEND als geldig JSON zonder markdown-opmaak:
-{"richting":"ao","karakternaam":"naam","kop":"korte zin max 12 woorden","observaties":"2-3 alineas. Verwijs specifiek naar antwoorden. Benoem twijfels of tegenstrijdigheden. Warm maar direct.","sessievraag":"één gerichte open vraag gebaseerd op hun kern-twijfel"}
-
-Gebruik voor richting uitsluitend: ao, ib, of onduidelijk`;
-
-    const userContent = `STUDENT: ${data.naam} | KLAS: ${data.klas}
-
-SCHUIFREGELAARS:
-${data.slSummary}
-
-SCENARIO S:
-1 (kassaapp): ${data.sc1}
-2 (stageplaats): ${data.sc2}
-3 (gehackte laptop): ${data.sc3}
-
-OPEN VRAGEN:
-Waarom ICT: "${data.open1}"
-Toekomstbeeld: "${data.open2}"
-Leukste MBI-moment: "${data.open3}"
-
-AI-SECTIE:
-Angst voor AI: ${data.aiAngst}
-Reactie na AI-info: "${data.open4}"`;
+    const userContent = encodeURIComponent(
+      'STUDENT: ' + data.naam + ' | KLAS: ' + data.klas + '\n\n' +
+      'SCHUIFREGELAARS: ' + slSummary + '\n\n' +
+      'SCENARIO 1 (kassaapp): ' + sc1 + '\n' +
+      'SCENARIO 2 (stageplaats): ' + sc2 + '\n' +
+      'SCENARIO 3 (gehackte laptop): ' + sc3 + '\n\n' +
+      'Waarom ICT: ' + data.open1 + '\n' +
+      'Toekomstbeeld: ' + data.open2 + '\n' +
+      'Leukste MBI-moment: ' + data.open3 + '\n\n' +
+      'AI-angst als keuzedriver: ' + data.aiAngst + '\n' +
+      'Reactie na AI-info: ' + data.open4
+    );
 
     try {
-      const resp = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': ANTHROPIC_API_KEY,
-          'anthropic-version': '2023-06-01'
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-6',
-          max_tokens: 1000,
-          system: systemPrompt,
-          messages: [{ role: 'user', content: userContent }]
-        })
-      });
-
+      // Stuur naar GAS via GET (geen CORS-blokkade)
+      // GAS doet de Claude API-aanroep server-side en stuurt JSON terug
+      const url = GAS_URL + '?type=analyse&content=' + userContent.substring(0, 2000);
+      const resp = await fetch(url, { method: 'GET', mode: 'cors' });
       clearInterval(stepTimer);
+
       const json = await resp.json();
+      if (json.error) throw new Error(json.error);
 
-      if (json.error) throw new Error(json.error.message || 'API fout');
-
-      const responseText = json.content?.[0]?.text || '';
-      const clean = responseText.replace(/```json|```/g, '').trim();
+      const clean = (json.text || '').replace(/```json|```/g, '').trim();
       const parsed = JSON.parse(clean);
       profileData = parsed;
 
@@ -1449,28 +1460,35 @@ Reactie na AI-info: "${data.open4}"`;
     const data = collectData();
     const motivatie = document.getElementById('finalMotivation').value;
 
-    // Stuur via GET met no-cors — omzeilt CORS volledig, GAS ontvangt via doGet
+    // Vertaal ruwe waarden naar leesbare tekst voor de sheet
+    const keuzeLabel = { ao: 'AO — Applicatieontwikkeling', ib: 'IB — Systeem- en Netwerkbeheer', doubt: 'Twijfel' }[finalChoice] || 'Geen keuze';
+
     const params = new URLSearchParams({
       type: 'submit',
       naam: data.naam,
       klas: data.klas,
-      sl1: data.sl1, sl2: data.sl2, sl3: data.sl3, sl4: data.sl4,
-      sc1: data.sc1, sc2: data.sc2, sc3: data.sc3,
-      open1: data.open1.substring(0,200),
-      open2: data.open2.substring(0,200),
-      open3: data.open3.substring(0,200),
-      open4: data.open4.substring(0,200),
+      sl1: sliderLabel(data.sl1, 'Bouwen', 'Repareren'),
+      sl2: sliderLabel(data.sl2, 'Iets gemaakt', 'Alles draait soepel'),
+      sl3: sliderLabel(data.sl3, 'Algoritme', 'Server/netwerk'),
+      sl4: sliderLabel(data.sl4, 'Product bouwen', 'Omgeving bewaken'),
+      sc1: SC_LABELS[data.sc1] || data.sc1 || '',
+      sc2: SC_LABELS[data.sc2] || data.sc2 || '',
+      sc3: SC_LABELS[data.sc3] || data.sc3 || '',
+      open1: data.open1.substring(0, 300),
+      open2: data.open2.substring(0, 300),
+      open3: data.open3.substring(0, 300),
+      open4: data.open4.substring(0, 300),
       aiAngst: data.aiAngst,
       profileRichting: profileData?.richting || '',
       profileKarakternaam: profileData?.karakternaam || '',
-      profileKop: (profileData?.kop || '').substring(0,100),
-      profileObs: (profileData?.observaties || '').substring(0,500),
-      profileQ: (profileData?.sessievraag || '').substring(0,200),
-      keuze: finalChoice,
-      motivatie: motivatie.substring(0,300)
+      profileKop: (profileData?.kop || '').substring(0, 150),
+      profileObs: (profileData?.observaties || '').substring(0, 500),
+      profileQ: (profileData?.sessievraag || '').substring(0, 300),
+      keuze: keuzeLabel,
+      motivatie: motivatie.substring(0, 500)
     });
 
-    fetch(GAS_SUBMIT_URL + '?' + params.toString(), {
+    fetch(GAS_URL + '?' + params.toString(), {
       method: 'GET',
       mode: 'no-cors'
     }).catch(() => {});
