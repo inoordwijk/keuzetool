@@ -773,11 +773,7 @@ input[type=text]:focus, select:focus { outline: none; border-color: var(--ao); }
       <div>Er zijn <strong>geen goede of foute antwoorden</strong>. Wees eerlijk — alleen dan helpt dit echt. Je voorlopige keuze aan het einde is <strong>niet definitief</strong>. De sessie met je docent is er juist voor om hierover te praten.</div>
     </div>
 
-    <div class="gas-box" style="margin-top:14px; margin-bottom:0;">
-      <label>Script URL (van je docent)</label>
-      <input type="text" id="gasUrl" value="https://script.google.com/macros/s/AKfycby0Xmo8_gZxUeG0O5O02H9fk9Zx5oDcukSS2uhgxiTOl3fKAw9HNwxQy1GKJsHn82lrnw/exec" style="display:none">
-      <div class="gas-note">Vul de URL in die je docent heeft gedeeld. Zonder deze URL werkt de AI-analyse niet.</div>
-    </div>
+    <input type="hidden" id="gasUrl" value="https://script.google.com/macros/s/AKfycby0Xmo8_gZxUeG0O5O02H9fk9Zx5oDcukSS2uhgxiTOl3fKAw9HNwxQy1GKJsHn82lrnw/exec">
 
     <div class="nav-row" style="border-top:none; padding-top:0; margin-top:16px;">
       <button class="btn primary" onclick="startTool()">
