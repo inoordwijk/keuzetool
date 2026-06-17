@@ -1415,16 +1415,25 @@ function animateLoadingSteps() {
     );
 
     try {
-      // Stuur naar GAS via GET (geen CORS-blokkade)
-      // GAS doet de Claude API-aanroep server-side en stuurt JSON terug
-      const url = GAS_URL + '?type=analyse&content=' + userContent.substring(0, 2000);
-      const resp = await fetch(url, { method: 'GET', mode: 'cors' });
+      // Stuur naar GAS via GET — GAS roept Claude server-side aan
+      const params = new URLSearchParams({ type: 'analyse', content: userContent });
+      const url = GAS_URL + '?' + params.toString().substring(0, 2048);
+      const resp = await fetch(url, { method: 'GET', mode: 'cors', redirect: 'follow' });
       clearInterval(stepTimer);
 
-      const json = await resp.json();
-      if (json.error) throw new Error(json.error);
+      // Lees altijd eerst als tekst — voorkomt crash bij HTML-foutpagina van GAS
+      const rawText = await resp.text();
+      let json;
+      try {
+        json = JSON.parse(rawText);
+      } catch(parseErr) {
+        // GAS stuurde geen JSON — log eerste 200 tekens voor diagnose
+        throw new Error('GAS stuurde geen geldige JSON. Eerste 200 tekens: ' + rawText.substring(0, 200));
+      }
+      if (json.error) throw new Error('GAS fout: ' + json.error);
 
       const clean = (json.text || '').replace(/```json|```/g, '').trim();
+      if (!clean) throw new Error('Lege response van GAS');
       const parsed = JSON.parse(clean);
       profileData = parsed;
 
@@ -1448,7 +1457,8 @@ function animateLoadingSteps() {
       clearInterval(stepTimer);
       document.getElementById('profileLoading').style.display = 'none';
       document.getElementById('profileError').style.display = 'block';
-      document.getElementById('errorMsg').textContent = 'De analyse kon niet worden uitgevoerd (' + err.message + '). Ga toch verder — je docent bespreekt jouw antwoorden in de sessie.';
+      const shortMsg = err.message.length > 120 ? err.message.substring(0,120) + '...' : err.message;
+      document.getElementById('errorMsg').textContent = 'Fout: ' + shortMsg + ' — Je docent bespreekt jouw antwoorden in de sessie.';
       document.getElementById('s5nav').style.display = 'flex';
     }
   }
