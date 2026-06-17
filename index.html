@@ -1352,29 +1352,35 @@ function animateLoadingSteps() {
   }, 1200);
 }
 
-async function startAnalyse() {
-  goTo(5);
-  document.getElementById('profileLoading').style.display = 'block';
-  document.getElementById('profileResult').style.display = 'none';
-  document.getElementById('profileError').style.display = 'none';
-  document.getElementById('s5nav').style.display = 'none';
+  // ── API configuratie ──
+  const ANTHROPIC_API_KEY = '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';
+  const GAS_SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbxgUBD-Kmyy4a2sKlwFCts8l4S3A9VGma3DwDfmH8iYFyuuJmz-v9pvhEmF5TT1YfFzYA/exec';
 
-  const stepTimer = animateLoadingSteps();
-  const data = collectData();
+  async function startAnalyse() {
+    goTo(5);
+    document.getElementById('profileLoading').style.display = 'block';
+    document.getElementById('profileResult').style.display = 'none';
+    document.getElementById('profileError').style.display = 'none';
+    document.getElementById('s5nav').style.display = 'none';
 
-  const systemPrompt = `Je bent een loopbaanbegeleidingsassistent voor MBO ICT-studenten aan het NATIN in Suriname. Een tweedejaarsstudent heeft een reflectietool ingevuld om te kiezen tussen AO (Applicatieontwikkeling) en IB (Systeem- en Netwerkbeheer).
+    const stepTimer = animateLoadingSteps();
+    const data = collectData();
 
-Analyseer de antwoorden en geef een persoonlijke reflectie in het Nederlands op B1-niveau. Wees warm, specifiek en eerlijk — verwijs direct naar wat de student heeft geschreven. Geef het profiel een karakternaam (bijv. "De Bouwer", "De Wachter", "De Verkenner", "De Architect", "De Probleemoplosser" etc.).
+    const systemPrompt = `Je bent een loopbaanbegeleidingsassistent voor MBO ICT-studenten aan het NATIN in Suriname. Een tweedejaarsstudent heeft een reflectietool ingevuld om te kiezen tussen AO (Applicatieontwikkeling) en IB (Systeem- en Netwerkbeheer).
+
+Analyseer de antwoorden en geef een persoonlijke reflectie in het Nederlands op B1-niveau. Wees warm, specifiek en eerlijk. Verwijs direct naar wat de student heeft geschreven. Geef het profiel een karakternaam zoals "De Bouwer", "De Wachter", "De Verkenner", "De Architect" of "De Probleemoplosser".
 
 Geef je antwoord UITSLUITEND als geldig JSON zonder markdown-opmaak:
-{"richting":"ao"|"ib"|"onduidelijk","karakternaam":"naam","kop":"korte zin max 12 woorden","observaties":"2-3 alineas van elk 2-3 zinnen. Verwijs specifiek naar antwoorden. Benoem ook twijfels of tegenstrijdigheden. Warm maar direct.","sessievraag":"één gerichte open vraag gebaseerd op de kern van hun twijfel of interessantste punt"}`;
+{"richting":"ao","karakternaam":"naam","kop":"korte zin max 12 woorden","observaties":"2-3 alineas. Verwijs specifiek naar antwoorden. Benoem twijfels of tegenstrijdigheden. Warm maar direct.","sessievraag":"één gerichte open vraag gebaseerd op hun kern-twijfel"}
 
-  const userContent = `STUDENT: ${data.naam} | KLAS: ${data.klas}
+Gebruik voor richting uitsluitend: ao, ib, of onduidelijk`;
+
+    const userContent = `STUDENT: ${data.naam} | KLAS: ${data.klas}
 
 SCHUIFREGELAARS:
 ${data.slSummary}
 
-SCENARIO'S:
+SCENARIO S:
 1 (kassaapp): ${data.sc1}
 2 (stageplaats): ${data.sc2}
 3 (gehackte laptop): ${data.sc3}
@@ -1385,25 +1391,17 @@ Toekomstbeeld: "${data.open2}"
 Leukste MBI-moment: "${data.open3}"
 
 AI-SECTIE:
-Angst voor AI als keuzedriver: ${data.aiAngst}
+Angst voor AI: ${data.aiAngst}
 Reactie na AI-info: "${data.open4}"`;
 
-  try {
-    let responseText = '';
-
-    if (GAS_URL) {
-      const resp = await fetch(GAS_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type: 'analyse', system: systemPrompt, userContent })
-      });
-      const json = await resp.json();
-      responseText = json.text || '';
-    } else {
-      // Direct Anthropic API (werkt alleen vanuit claude.ai artifacts)
+    try {
       const resp = await fetch('https://api.anthropic.com/v1/messages', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01'
+        },
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
           max_tokens: 1000,
@@ -1411,82 +1409,74 @@ Reactie na AI-info: "${data.open4}"`;
           messages: [{ role: 'user', content: userContent }]
         })
       });
+
+      clearInterval(stepTimer);
       const json = await resp.json();
-      responseText = json.content?.[0]?.text || '';
+
+      if (json.error) throw new Error(json.error.message || 'API fout');
+
+      const responseText = json.content?.[0]?.text || '';
+      const clean = responseText.replace(/```json|```/g, '').trim();
+      const parsed = JSON.parse(clean);
+      profileData = parsed;
+
+      const icons = { ao: 'code', ib: 'router', onduidelijk: 'explore' };
+      const labels = { ao: 'AO-profiel', ib: 'IB-profiel', onduidelijk: 'Nog niet duidelijk' };
+      const card = document.getElementById('dnaCard');
+      card.className = 'dna-card ' + (parsed.richting || 'onduidelijk');
+      document.getElementById('dnaIcon').textContent = icons[parsed.richting] || 'fingerprint';
+      document.getElementById('dnaLabel').textContent = labels[parsed.richting] || 'Profiel';
+      document.getElementById('dnaName').textContent = parsed.karakternaam || parsed.kop;
+
+      const obsHtml = (parsed.observaties || '').split('\n\n').map(p => '<p>' + p + '</p>').join('');
+      document.getElementById('dnaObs').innerHTML = '<p><strong>' + (parsed.kop || '') + '</strong></p>' + obsHtml;
+      document.getElementById('dnaQ').textContent = parsed.sessievraag || '—';
+
+      document.getElementById('profileLoading').style.display = 'none';
+      document.getElementById('profileResult').style.display = 'block';
+      document.getElementById('s5nav').style.display = 'flex';
+
+    } catch(err) {
+      clearInterval(stepTimer);
+      document.getElementById('profileLoading').style.display = 'none';
+      document.getElementById('profileError').style.display = 'block';
+      document.getElementById('errorMsg').textContent = 'De analyse kon niet worden uitgevoerd (' + err.message + '). Ga toch verder — je docent bespreekt jouw antwoorden in de sessie.';
+      document.getElementById('s5nav').style.display = 'flex';
     }
-
-    clearInterval(stepTimer);
-
-    const clean = responseText.replace(/```json|```/g, '').trim();
-    const parsed = JSON.parse(clean);
-    profileData = parsed;
-
-    // Render
-    const card = document.getElementById('dnaCard');
-    const icons = { ao: 'code', ib: 'router', onduidelijk: 'explore' };
-    const labels = { ao: 'AO-profiel', ib: 'IB-profiel', onduidelijk: 'Nog niet duidelijk' };
-    card.className = 'dna-card ' + (parsed.richting || 'onduidelijk');
-    document.getElementById('dnaIcon').textContent = icons[parsed.richting] || 'fingerprint';
-    document.getElementById('dnaLabel').textContent = labels[parsed.richting] || 'Profiel';
-    document.getElementById('dnaName').textContent = parsed.karakternaam || parsed.kop;
-
-    const obsHtml = (parsed.observaties || '').split('\n\n').map(p => '<p>' + p + '</p>').join('');
-    document.getElementById('dnaObs').innerHTML = '<p><strong>' + (parsed.kop || '') + '</strong></p>' + obsHtml;
-    document.getElementById('dnaQ').textContent = parsed.sessievraag || '—';
-
-    document.getElementById('profileLoading').style.display = 'none';
-    document.getElementById('profileResult').style.display = 'block';
-    document.getElementById('s5nav').style.display = 'flex';
-
-  } catch(err) {
-    clearInterval(stepTimer);
-    document.getElementById('profileLoading').style.display = 'none';
-    document.getElementById('profileError').style.display = 'block';
-    document.getElementById('errorMsg').textContent = 'De analyse kon niet worden uitgevoerd (' + err.message + '). Ga toch verder — je docent bespreekt jouw antwoorden in de sessie.';
-    document.getElementById('s5nav').style.display = 'flex';
   }
-}
 
-async function submitForm() {
-  const data = collectData();
-  const choiceLabel = { ao: 'AO (Applicatieontwikkeling)', ib: 'IB (Systeem- en Netwerkbeheer)', doubt: 'Twijfel', '': 'Geen keuze gemaakt' }[finalChoice] || 'Geen keuze';
+  function submitForm() {
+    const data = collectData();
+    const motivatie = document.getElementById('finalMotivation').value;
 
-  const payload = {
-    type: 'submit',
-    data: {
-      ...data,
+    // Stuur via GET met no-cors — omzeilt CORS volledig, GAS ontvangt via doGet
+    const params = new URLSearchParams({
+      type: 'submit',
+      naam: data.naam,
+      klas: data.klas,
+      sl1: data.sl1, sl2: data.sl2, sl3: data.sl3, sl4: data.sl4,
+      sc1: data.sc1, sc2: data.sc2, sc3: data.sc3,
+      open1: data.open1.substring(0,200),
+      open2: data.open2.substring(0,200),
+      open3: data.open3.substring(0,200),
+      open4: data.open4.substring(0,200),
+      aiAngst: data.aiAngst,
       profileRichting: profileData?.richting || '',
       profileKarakternaam: profileData?.karakternaam || '',
-      profileKop: profileData?.kop || '',
-      profileObs: profileData?.observaties || '',
-      profileQ: profileData?.sessievraag || '',
+      profileKop: (profileData?.kop || '').substring(0,100),
+      profileObs: (profileData?.observaties || '').substring(0,500),
+      profileQ: (profileData?.sessievraag || '').substring(0,200),
       keuze: finalChoice,
-      motivatie: document.getElementById('finalMotivation').value
-    }
-  };
+      motivatie: motivatie.substring(0,300)
+    });
 
-  if (GAS_URL) {
-    try {
-      await fetch(GAS_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-    } catch(e) { console.warn('Submit error:', e); }
-  } else {
-    // Fallback: mailto
-    const sub = encodeURIComponent('Tech DNA Test — ' + data.naam);
-    const body = encodeURIComponent(
-      'NAAM: ' + data.naam + '\nKLAS: ' + data.klas +
-      '\nKEUZE: ' + choiceLabel +
-      '\nPROFIEL: ' + (profileData?.karakternaam || 'n.v.t.') +
-      '\nMOTIVATIE: ' + document.getElementById('finalMotivation').value
-    );
-    window.location.href = 'mailto:?subject=' + sub + '&body=' + body;
+    fetch(GAS_SUBMIT_URL + '?' + params.toString(), {
+      method: 'GET',
+      mode: 'no-cors'
+    }).catch(() => {});
+
+    goTo(7);
   }
-
-  goTo(7);
-}
 </script>
 </body>
 </html>
