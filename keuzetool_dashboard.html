@@ -511,11 +511,17 @@ function switchView(view, btn) {
   if (view === 'insights') initInsightNav();
 }
 
-function anoniem(naam) {
-  if (!naam || naam === '—') return '—';
-  const delen = naam.trim().split(' ');
-  if (delen.length === 1) return delen[0][0] + '.';
-  return delen[0][0] + '. ' + delen[delen.length-1];
+function profielLabel(r) {
+  if (r.karakternaam && r.karakternaam.trim()) return r.karakternaam;
+  const k = classify(r.keuze);
+  if (k === 'ao') return 'Student AO';
+  if (k === 'ib') return 'Student IB';
+  if (k === 'twijfel') return 'Student (twijfelt)';
+  return 'Student';
+}
+
+function anoniem(naam, r) {
+  return r ? profielLabel(r) : '—';
 }
 
 async function loadData() {
@@ -678,7 +684,7 @@ function renderTable() {
     const profielBadge = profiel==='ao'?'b-ao':profiel==='ib'?'b-ib':profiel==='onduidelijk'?'b-nd':'b-nd';
     const matchIcon = isTw ? '<span style="color:var(--amber)">?</span>' : match ? '<span style="color:var(--ib)">✓</span>' : '<span style="color:var(--danger)">✗</span>';
     return `<tr class="${rowClass}">
-      <td style="font-weight:500">${anoniem(r.naam)}</td>
+      <td style="font-weight:500">${profielLabel(r)}</td>
       <td style="color:var(--ink-3);font-size:11px">${(r.klas||'').replace('PT ','')}</td>
       <td><span class="badge ${keuzeBadge}">${keuze.toUpperCase()}</span></td>
       <td><span class="badge ${profielBadge}">${profiel}</span></td>
@@ -705,7 +711,7 @@ function renderInsightData(ao, ib, tw, total) {
   });
   document.getElementById('i2-conflict').textContent = conflicts.length;
   document.getElementById('i2-names').innerHTML = conflicts.length
-    ? conflicts.map(r => `<div style="padding:6px 0;border-bottom:1px solid var(--border)"><strong>${anoniem(r.naam)}</strong> kiest <strong>${classify(r.keuze).toUpperCase()}</strong> maar AI-profiel zegt <strong>${r.profiel}</strong></div>`).join('')
+    ? conflicts.map(r => `<div style="padding:6px 0;border-bottom:1px solid var(--border)"><strong>${profielLabel(r)}</strong> kiest <strong>${classify(r.keuze).toUpperCase()}</strong> maar AI-profiel zegt <strong>${r.profiel}</strong></div>`).join('')
     : '<span style="color:var(--ink-3)">Geen conflicten gevonden — student keuze en AI-profiel stemmen overeen.</span>';
 
   const scared = rawData.filter(r => r.angst === 'Behoorlijk' || r.angst === 'Heel sterk').length;
@@ -719,7 +725,7 @@ function renderInsightData(ao, ib, tw, total) {
     ? `"${firstQuote.motivatie || firstQuote.sessievraag || 'Geen motivatie ingevuld'}"` : '"Geen twijfelaars gevonden."';
   document.getElementById('i4-cards').innerHTML = doubters.slice(0,3).map(r =>
     `<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
-      <div style="font-weight:500;font-size:13px;margin-bottom:4px">${anoniem(r.naam)}</div>
+      <div style="font-weight:500;font-size:13px;margin-bottom:4px">${profielLabel(r)}</div>
       <div style="font-size:11px;color:var(--ink-3)">AI-profiel: ${r.profiel||'?'} · Angst: ${r.angst||'?'}</div>
       <div style="font-size:12px;color:var(--ink-2);margin-top:6px;font-style:italic">"${r.sessievraag||'—'}"</div>
     </div>`).join('') || '<div style="color:var(--ink-3);font-size:13px">Geen twijfelaars.</div>';
@@ -738,7 +744,7 @@ async function runAIAnalysis() {
   panel.innerHTML = '<div style="padding:20px;text-align:center;color:var(--ink-3);font-size:13px">AI analyseert de klas…</div>';
   if (!rawData.length) { panel.innerHTML = '<div style="padding:20px;color:var(--ink-3);font-size:13px">Geen data beschikbaar.</div>'; return; }
 
-  const summary = rawData.map(r => `${anoniem(r.naam)}: keuze=${r.keuze}, profiel=${r.profiel}, angst=${r.angst}, motivatie="${r.motivatie||''}"`).join('\n');
+  const summary = rawData.map((r,i) => `${profielLabel(r)}: keuze=${r.keuze}, profiel=${r.profiel}, angst=${r.angst}, motivatie="${r.motivatie||''}"`).join('\n');
   const prompt = `Je bent een loopbaanbegeleidingsassistent voor MBO ICT-docenten aan het NATIN in Suriname. Hieronder zijn de keuzetool-resultaten van een klas studenten die moeten kiezen tussen AO (Applicatieontwikkeling) en IB (Systeem- en Netwerkbeheer). Analyseer de resultaten en geef 3 gerichte inzichten in het Nederlands op B1-niveau. Elke insight: 1 zin conclusie + 1 zin aanbeveling voor de sessie. Wees specifiek, verwijs naar patronen in de data. Geef je antwoord als JSON: [{"label":"korte titel","conclusie":"...","aanbeveling":"...","type":"trend|waarschuwing|kans"}]\n\nDATA:\n${summary}`;
 
   try {
