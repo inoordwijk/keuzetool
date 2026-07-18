@@ -216,6 +216,73 @@ body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink);f
 .ins-arrow{background:transparent;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);padding:8px 16px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:13px;transition:all .15s;display:flex;align-items:center;gap:6px}
 .ins-arrow:hover{background:rgba(255,255,255,.08)}
 .ins-arrow:disabled{opacity:.3;cursor:default}
+
+/* ── SESSIE VIEW ── */
+.sess-wrap{background:#0f0f0f;min-height:calc(100vh - 52px);display:flex;flex-direction:column}
+.sess-slides-nav{background:#111;padding:10px 20px;display:flex;align-items:center;gap:6px;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0}
+.sdot{width:22px;height:22px;border-radius:50%;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.3);font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;font-family:inherit}
+.sdot.active{background:#185FA5;border-color:#185FA5;color:#fff}
+.sdot.done{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12);color:rgba(255,255,255,.4)}
+.sess-label{font-size:11px;color:rgba(255,255,255,.25);margin-left:auto}
+.sarr{background:transparent;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.6);padding:5px 14px;border-radius:5px;cursor:pointer;font-family:inherit;font-size:12px;transition:all .15s;margin-left:6px}
+.sarr:hover{background:rgba(255,255,255,.06)}
+.sarr:disabled{opacity:.3;cursor:default}
+.sess-main{flex:1;overflow:hidden;position:relative}
+.sslide{display:none;height:100%;flex-direction:column;align-items:center;justify-content:center;padding:48px;text-align:center}
+.sslide.active{display:flex}
+.sslide.split{display:none;height:100%;grid-template-columns:1fr 1fr;padding:0;text-align:left}
+.sslide.split.active{display:grid}
+.sslide.grid4{display:none;height:100%;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:rgba(255,255,255,.06);padding:0}
+.sslide.grid4.active{display:grid}
+
+.s-eyebrow{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:14px}
+.s-h{font-family:'DM Serif Display',serif;font-size:42px;font-weight:400;color:#fff;line-height:1.2;max-width:640px;margin:0 auto 16px}
+.s-h em{font-style:italic;color:rgba(255,255,255,.35)}
+.s-sub{font-size:15px;color:rgba(255,255,255,.45);max-width:460px;margin:0 auto;line-height:1.65}
+.s-note{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:10px 16px;font-size:11px;color:rgba(255,255,255,.3);margin-top:20px;font-style:italic;max-width:440px}
+
+.s-stelling{font-family:'DM Serif Display',serif;font-size:38px;font-weight:400;color:#fff;line-height:1.25;max-width:620px;margin:0 auto 28px}
+.s-stelling em{font-style:italic;color:rgba(255,255,255,.35)}
+.s-instructions{display:flex;gap:32px;margin-top:8px}
+.s-inst-item{display:flex;flex-direction:column;align-items:center;gap:8px;font-size:11px;color:rgba(255,255,255,.3)}
+.s-inst-icon{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;font-size:18px;color:rgba(255,255,255,.5)}
+.s-stelling-num{font-size:11px;letter-spacing:.1em;color:rgba(255,255,255,.2);margin-bottom:20px}
+.s-progress-bar{width:200px;height:2px;background:rgba(255,255,255,.08);border-radius:1px;margin-top:24px;overflow:hidden}
+.s-progress-fill{height:100%;background:#185FA5;border-radius:1px;transition:width .3s}
+
+.sl-left{background:#0f0f0f;padding:44px 40px;display:flex;flex-direction:column;justify-content:center}
+.sl-right{background:#fafaf8;padding:36px 32px;display:flex;flex-direction:column;justify-content:center}
+.sl-eyebrow{font-size:10px;letter-spacing:.1em;color:rgba(255,255,255,.25);margin-bottom:10px}
+.sl-h{font-family:'DM Serif Display',serif;font-size:28px;color:#fff;line-height:1.3;margin-bottom:14px}
+.sl-body{font-size:13px;color:rgba(255,255,255,.45);line-height:1.7}
+.sl-note{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:6px;padding:10px 14px;font-size:11px;color:rgba(255,255,255,.3);margin-top:18px;font-style:italic}
+.sl-rtitle{font-size:13px;font-weight:500;color:#1a1a1a;margin-bottom:8px}
+.sl-rsub{font-size:11px;color:#888;margin-bottom:14px;line-height:1.5}
+.sl-checklist{display:flex;flex-direction:column;gap:8px}
+.sl-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#444;line-height:1.45}
+.sl-dot{width:6px;height:6px;border-radius:50%;background:#185FA5;flex-shrink:0;margin-top:5px}
+.sl-questions{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.sl-q{background:#f4f2ec;border-radius:6px;padding:10px 12px;font-size:12px;color:#333;line-height:1.5;font-style:italic}
+
+.hoek-quad{padding:28px 32px;display:flex;flex-direction:column;justify-content:center}
+.hoek-qa{background:#0a1628}
+.hoek-qb{background:#0a2418}
+.hoek-qc{background:#1a1400}
+.hoek-qd{background:#1a0f0f}
+.hoek-qlabel{font-size:10px;letter-spacing:.1em;color:rgba(255,255,255,.25);margin-bottom:10px}
+.hoek-qtext{font-family:'DM Serif Display',serif;font-size:22px;color:#fff;line-height:1.3;margin-bottom:8px}
+.hoek-qsub{font-size:11px;color:rgba(255,255,255,.3);line-height:1.5}
+
+.fiveq-num{font-size:10px;letter-spacing:.1em;color:rgba(255,255,255,.25);margin-bottom:16px}
+.fiveq-h{font-family:'DM Serif Display',serif;font-size:36px;color:#fff;line-height:1.25;max-width:560px;margin:0 auto 12px}
+.fiveq-h em{font-style:italic;color:rgba(255,255,255,.35)}
+.fiveq-sub{font-size:13px;color:rgba(255,255,255,.4);margin-bottom:24px}
+.fiveq-pills{display:flex;gap:8px;justify-content:center}
+.fiveq-pill{padding:7px 18px;border-radius:20px;font-size:12px;border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.3)}
+.fiveq-pill.active-pill{background:rgba(24,95,165,.2);border-color:#185FA5;color:#85B7EB}
+
+.afsluiting-h{font-family:'DM Serif Display',serif;font-size:44px;color:#fff;line-height:1.2;max-width:560px;margin:0 auto 16px}
+.afsluiting-sub{font-size:16px;color:rgba(255,255,255,.4);max-width:400px;margin:0 auto}
 .ins-progress{font-size:12px;color:rgba(255,255,255,.3)}
 
 /* quote block */
@@ -242,6 +309,7 @@ body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink);f
   <div style="display:flex;gap:4px;margin-left:24px">
     <button class="vt-btn active" id="vt-overview" onclick="switchView('overview',this)">Overzicht</button>
     <button class="vt-btn" id="vt-insights" onclick="switchView('insights',this)">Insights</button>
+    <button class="vt-btn" id="vt-sessie" onclick="switchView('sessie',this)">Sessie</button>
   </div>
   <div class="nav-right">
     <span id="last-update" style="font-size:11px;color:rgba(255,255,255,.3)">Laden…</span>
@@ -492,6 +560,146 @@ body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink);f
   </div>
 
 </div>
+
+<!-- ══════════════════════════════
+     SESSIE VIEW
+══════════════════════════════ -->
+<div class="view" id="view-sessie">
+<div class="sess-wrap">
+
+  <div class="sess-slides-nav">
+    <div class="sdot done" onclick="goSlide(0)">1</div>
+    <div class="sdot done" onclick="goSlide(1)">2</div>
+    <div class="sdot active" onclick="goSlide(2)">3</div>
+    <div class="sdot" onclick="goSlide(3)">4</div>
+    <div class="sdot" onclick="goSlide(4)">5</div>
+    <div class="sdot" onclick="goSlide(5)">6</div>
+    <div class="sdot" onclick="goSlide(6)">7</div>
+    <span class="sess-label" id="sess-label">Blok 1 - Opening</span>
+    <button class="sarr" id="sarr-prev" onclick="navSlide(-1)" disabled>Vorige</button>
+    <button class="sarr" id="sarr-next" onclick="navSlide(1)">Volgende</button>
+  </div>
+
+  <div class="sess-main">
+
+    <!-- SLIDE 1: Opening -->
+    <div class="sslide active" id="slide-0">
+      <div class="s-eyebrow">NATIN ICT - Keuzesessie 30 juli 2026</div>
+      <h1 class="s-h">Dit zijn <em>jullie.</em></h1>
+      <p class="s-sub">Kijk maar.</p>
+      <div class="s-note">Switch naar de Overzicht-tab om het dashboard te tonen. Keer terug naar Sessie voor blok 2.</div>
+    </div>
+
+    <!-- SLIDE 2: Interview blok -->
+    <div class="sslide split" id="slide-1">
+      <div class="sl-left">
+        <div class="sl-eyebrow">Blok 2 - Interview - 18 minuten</div>
+        <h2 class="sl-h">Drie vragen.<br>Eerlijke antwoorden.</h2>
+        <div class="sl-questions">
+          <div class="sl-q">Wat deed jij op een gewone stagdag? Niet het mooiste moment - een gewone dinsdag.</div>
+          <div class="sl-q">Was er iets dat je niet had verwacht van deze richting?</div>
+          <div class="sl-q">Als je één ding mocht weten voordat je koos - wat had je willen weten?</div>
+        </div>
+      </div>
+      <div class="sl-right">
+        <div class="sl-rtitle">Docent - volgorde en timing</div>
+        <div class="sl-rsub">Interview vier studenten in deze volgorde. Max 4 min per student.</div>
+        <div class="sl-checklist">
+          <div class="sl-item"><div class="sl-dot"></div>AO - overtuigd (positief voorbeeld)</div>
+          <div class="sl-item"><div class="sl-dot"></div>IB - kritisch terugkijkend (eerlijkheid)</div>
+          <div class="sl-item"><div class="sl-dot"></div>AO - aanvankelijk twijfelend (herkenbaarheid)</div>
+          <div class="sl-item"><div class="sl-dot"></div>IB - overtuigd (sterk slot)</div>
+          <div class="sl-item" style="margin-top:6px;padding-top:6px;border-top:1px solid #eee"><div class="sl-dot" style="background:#BA7517"></div>4 min open vragen van de klas</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDES 3-8: Stellingen -->
+    <div class="sslide" id="slide-2">
+      <div class="s-stelling-num" id="stelling-counter">Stelling 1 van 6</div>
+      <div class="s-stelling" id="stelling-text">Ik weet het verschil tussen wat een AO-er en een IB-er op een <em>gewone werkdag</em> doet.</div>
+      <div class="s-instructions">
+        <div class="s-inst-item"><div class="s-inst-icon">&#8679;</div>Eens - sta op</div>
+        <div class="s-inst-item"><div class="s-inst-icon">~</div>Twijfel - rand stoel</div>
+        <div class="s-inst-item"><div class="s-inst-icon">&#8681;</div>Oneens - blijf zitten</div>
+      </div>
+      <div class="s-progress-bar"><div class="s-progress-fill" id="stelling-progress" style="width:17%"></div></div>
+      <div style="display:flex;gap:8px;margin-top:20px">
+        <button class="sarr" id="stelling-prev" onclick="navStelling(-1)" disabled>Vorige stelling</button>
+        <button class="sarr" id="stelling-next" onclick="navStelling(1)">Volgende stelling</button>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: Hete stoel -->
+    <div class="sslide split" id="slide-3">
+      <div class="sl-left">
+        <div class="sl-eyebrow">Blok 5 - Hete stoel - 15 minuten</div>
+        <h2 class="sl-h">Een vrijwilliger.<br>Eerlijke vragen.</h2>
+        <div class="sl-body" style="margin-top:8px">Een student zit vooraan. De klas stelt vragen. Geen adviezen - alleen vragen.</div>
+        <div class="sl-note">Openingsvraag: "Wat is jouw gevoel op dit moment - en waar komt dat vandaan?"</div>
+      </div>
+      <div class="sl-right">
+        <div class="sl-rtitle">Aanstekervragen als het stil valt</div>
+        <div class="sl-checklist">
+          <div class="sl-item"><div class="sl-dot"></div>"Wat zou er moeten veranderen voor je om met zekerheid te kiezen?"</div>
+          <div class="sl-item"><div class="sl-dot"></div>"Als je over vijf jaar terugkijkt - wat hoop je dan dat je gekozen hebt?"</div>
+          <div class="sl-item"><div class="sl-dot"></div>"Wat zegt jouw lichaam als je denkt aan AO? En aan IB?"</div>
+          <div class="sl-item"><div class="sl-dot"></div>"Wie in deze zaal begrijpt jouw twijfel het beste?"</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: Vier hoeken -->
+    <div class="sslide grid4" id="slide-4">
+      <div class="hoek-quad hoek-qa">
+        <div class="hoek-qlabel">Hoek A</div>
+        <div class="hoek-qtext">Ik neig naar AO en weet waarom</div>
+        <div class="hoek-qsub">Ga naar de linkervoorkant van het lokaal</div>
+      </div>
+      <div class="hoek-quad hoek-qb">
+        <div class="hoek-qlabel">Hoek B</div>
+        <div class="hoek-qtext">Ik neig naar IB en weet waarom</div>
+        <div class="hoek-qsub">Ga naar de rechtervoorkant van het lokaal</div>
+      </div>
+      <div class="hoek-quad hoek-qc">
+        <div class="hoek-qlabel">Hoek C</div>
+        <div class="hoek-qtext">Ik twijfel maar heb een gevoel</div>
+        <div class="hoek-qsub">Ga naar de linkerachterhoek van het lokaal</div>
+      </div>
+      <div class="hoek-quad hoek-qd">
+        <div class="hoek-qlabel">Hoek D</div>
+        <div class="hoek-qtext">Ik heb echt geen idee</div>
+        <div class="hoek-qsub">Ga naar de rechterachterhoek van het lokaal</div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6-8: 5/5/5 vragen -->
+    <div class="sslide" id="slide-5">
+      <div class="fiveq-num" id="fiveq-counter">Vraag 1 van 3</div>
+      <h2 class="fiveq-h" id="fiveq-text">Hoe voel je je over jouw richting over <em>5 dagen?</em></h2>
+      <p class="fiveq-sub">Schrijf. Geen overleg. Geen goede antwoorden.</p>
+      <div class="fiveq-pills">
+        <div class="fiveq-pill active-pill" id="fq0">5 dagen</div>
+        <div class="fiveq-pill" id="fq1">5 maanden</div>
+        <div class="fiveq-pill" id="fq2">5 jaar</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:24px">
+        <button class="sarr" id="fiveq-prev" onclick="navFiveQ(-1)" disabled>Vorige vraag</button>
+        <button class="sarr" id="fiveq-next" onclick="navFiveQ(1)">Volgende vraag</button>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: Afsluiting -->
+    <div class="sslide" id="slide-6">
+      <div class="s-eyebrow">Afsluiting</div>
+      <h1 class="afsluiting-h">De keuze die je maakt hoeft niet perfect te zijn.</h1>
+      <p class="afsluiting-sub">Hij moet eerlijk zijn.</p>
+    </div>
+
+  </div>
+</div>
+</div>
+
 
 <script>
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbxcGkK4MczzjE0L0fmqrBagCWXG6CVsPSdzMXrUd9yuJ1Np_PeeTpSXQsXByPfkUQI/exec';
@@ -811,6 +1019,87 @@ document.getElementById('ins-track')?.addEventListener('scroll', function() {
 
 loadData();
 initInsightNav();
+// ── SESSIE VIEW ──
+const STELLINGEN = [
+  'Ik weet het verschil tussen wat een AO-er en een IB-er op een <em>gewone werkdag</em> doet.',
+  'Ik krijg meer energie van iets maken dat er nog niet was, dan van iets laten werken dat al bestaat.',
+  'Als het systeem om me heen uitvalt — ik word de persoon die iedereen belt.',
+  'Als AI morgen alle standaard code schrijft, zou ik nog steeds voor <em>AO</em> kiezen.',
+  'Er was een moment in de MBI-fase waarop ik dacht: dit is precies wat ik wil doen. Ik weet nog welk moment dat was.',
+  'Ik heb stiekem al een keuze, maar ik durf het niet hardop te zeggen.'
+];
+
+const FIVEQ = [
+  { text: 'Hoe voel je je over jouw richting over <em>5 dagen?</em>', pill: '5 dagen' },
+  { text: 'Hoe voel je je erover over <em>5 maanden</em> — als je aan het stage loopt?', pill: '5 maanden' },
+  { text: 'Hoe voel je je erover over <em>5 jaar</em> — als je dit werk al een tijdje doet?', pill: '5 jaar' }
+];
+
+const SLIDE_LABELS = [
+  'Blok 1 - Opening',
+  'Blok 2 - Interview',
+  'Blok 3 - Stellingen',
+  'Blok 5 - Hete stoel',
+  'Blok 4 - Vier hoeken',
+  'Blok 6 - 5/5/5 reflectie',
+  'Afsluiting'
+];
+
+let currentSlide = 0;
+let currentStelling = 0;
+let currentFiveQ = 0;
+const TOTAL_SLIDES = 7;
+
+function goSlide(n) {
+  document.querySelectorAll('.sslide').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sdot').forEach((d, i) => {
+    d.classList.remove('active', 'done');
+    if (i < n) d.classList.add('done');
+    else if (i === n) d.classList.add('active');
+  });
+  currentSlide = n;
+  const slide = document.getElementById('slide-' + n);
+  if (slide) slide.classList.add('active');
+  document.getElementById('sess-label').textContent = SLIDE_LABELS[n] || '';
+  document.getElementById('sarr-prev').disabled = n === 0;
+  document.getElementById('sarr-next').disabled = n === TOTAL_SLIDES - 1;
+}
+
+function navSlide(dir) {
+  const next = Math.max(0, Math.min(TOTAL_SLIDES - 1, currentSlide + dir));
+  goSlide(next);
+}
+
+function navStelling(dir) {
+  currentStelling = Math.max(0, Math.min(STELLINGEN.length - 1, currentStelling + dir));
+  document.getElementById('stelling-text').innerHTML = STELLINGEN[currentStelling];
+  document.getElementById('stelling-counter').textContent = 'Stelling ' + (currentStelling + 1) + ' van ' + STELLINGEN.length;
+  document.getElementById('stelling-progress').style.width = Math.round((currentStelling + 1) / STELLINGEN.length * 100) + '%';
+  document.getElementById('stelling-prev').disabled = currentStelling === 0;
+  document.getElementById('stelling-next').disabled = currentStelling === STELLINGEN.length - 1;
+}
+
+function navFiveQ(dir) {
+  currentFiveQ = Math.max(0, Math.min(FIVEQ.length - 1, currentFiveQ + dir));
+  document.getElementById('fiveq-text').innerHTML = FIVEQ[currentFiveQ].text;
+  document.getElementById('fiveq-counter').textContent = 'Vraag ' + (currentFiveQ + 1) + ' van ' + FIVEQ.length;
+  [0,1,2].forEach(i => {
+    document.getElementById('fq' + i).classList.toggle('active-pill', i === currentFiveQ);
+  });
+  document.getElementById('fiveq-prev').disabled = currentFiveQ === 0;
+  document.getElementById('fiveq-next').disabled = currentFiveQ === FIVEQ.length - 1;
+}
+
+// Override switchView to handle sessie
+const _origSwitchView = switchView;
+function switchView(view, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.vt-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  btn.classList.add('active');
+  if (view === 'insights') initInsightNav();
+  if (view === 'sessie') goSlide(0);
+}
 </script>
 </body>
 </html>
