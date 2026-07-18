@@ -711,13 +711,7 @@ let charts = {};
 let currentInsight = 0;
 const TOTAL_INSIGHTS = 5;
 
-function switchView(view, btn) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.querySelectorAll('.vt-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('view-' + view).classList.add('active');
-  btn.classList.add('active');
-  if (view === 'insights') initInsightNav();
-}
+
 
 function profielLabel(r) {
   if (r.karakternaam && r.karakternaam.trim()) return r.karakternaam;
@@ -1095,8 +1089,10 @@ const _origSwitchView = switchView;
 function switchView(view, btn) {
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.vt-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('view-' + view).classList.add('active');
-  btn.classList.add('active');
+  const el = document.getElementById('view-' + view);
+  if (el) el.classList.add('active');
+  if (btn) btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
   if (view === 'insights') initInsightNav();
   if (view === 'sessie') goSlide(0);
 }
