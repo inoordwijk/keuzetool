@@ -140,7 +140,7 @@ body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink);f
 .ins-sub{font-size:12px;color:rgba(255,255,255,.5);max-width:420px;margin:0 auto;line-height:1.4;position:relative}
 
 /* scroll track */
-.ins-track-wrap{position:relative;overflow:hidden;height:calc(100vh - 108px)}
+.ins-track-wrap{position:relative;overflow:hidden;flex:1;min-height:0}
 .ins-track{
   display:flex;
   overflow-x:auto;
@@ -151,12 +151,13 @@ body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink);f
   scrollbar-width:none;
   padding:0;
   height:100%;
+  align-items:stretch;
 }
 .ins-track::-webkit-scrollbar{display:none}
 
 .ins-card{
   flex:0 0 100vw;
-  height:calc(100vh - 108px);
+  height:100%;
   scroll-snap-align:start;
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -172,7 +173,7 @@ body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink);f
 .ins-card-right{
   background:var(--surface);
   padding:24px 32px;
-  display:flex;flex-direction:column;justify-content:center;
+  display:flex;flex-direction:column;justify-content:flex-start;
   overflow-y:auto;
   border-left:1px solid rgba(0,0,0,.08);
 }
@@ -289,7 +290,7 @@ body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink);f
       <div class="card-title">Keuze verdeling</div>
       <div class="card-desc">Verhouding AO / IB / Twijfel over alle inzendingen.</div>
       <div class="leg" id="leg-1"></div>
-      <div style="position:relative;height:200px"><canvas id="c-pie" role="img" aria-label="Donut keuze verdeling"></canvas></div>
+      <div style="position:relative;height:250px"><canvas id="c-pie" role="img" aria-label="Donut keuze verdeling"></canvas></div>
     </div>
     <div class="card">
       <div class="card-title">Student vs. AI profiel</div>
@@ -298,7 +299,7 @@ body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink);f
         <div class="li"><div class="ld" style="background:#185FA5"></div> Student keuze</div>
         <div class="li"><div class="ld" style="background:#1baf7a"></div> AI profiel</div>
       </div>
-      <div style="position:relative;height:200px"><canvas id="c-cmp" role="img" aria-label="Vergelijking student vs AI profiel"></canvas></div>
+      <div style="position:relative;height:250px"><canvas id="c-cmp" role="img" aria-label="Vergelijking student vs AI profiel"></canvas></div>
     </div>
   </div>
 
@@ -307,18 +308,18 @@ body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink);f
     <div class="card">
       <div class="card-title">AI-angst als driver</div>
       <div class="card-desc">Mate waarin angst de keuze beïnvloedt.</div>
-      <div style="position:relative;height:170px"><canvas id="c-angst" role="img" aria-label="AI-angst scores"></canvas></div>
+      <div style="position:relative;height:210px"><canvas id="c-angst" role="img" aria-label="AI-angst scores"></canvas></div>
     </div>
     <div class="card">
       <div class="card-title">Overeenstemming</div>
       <div class="card-desc">Student keuze vs. AI-profiel richting.</div>
       <div class="leg" id="leg-match"></div>
-      <div style="position:relative;height:140px"><canvas id="c-match" role="img" aria-label="Overeenstemming student AI"></canvas></div>
+      <div style="position:relative;height:175px"><canvas id="c-match" role="img" aria-label="Overeenstemming student AI"></canvas></div>
     </div>
     <div class="card">
       <div class="card-title">Inzendingen over tijd</div>
       <div class="card-desc">Wanneer studenten de tool invulden.</div>
-      <div style="position:relative;height:170px"><canvas id="c-time" role="img" aria-label="Inzendingen per dag"></canvas></div>
+      <div style="position:relative;height:210px"><canvas id="c-time" role="img" aria-label="Inzendingen per dag"></canvas></div>
     </div>
   </div>
 
@@ -359,7 +360,7 @@ body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink);f
 <!-- ══════════════════════════════
      INSIGHTS VIEW
 ══════════════════════════════ -->
-<div class="view" id="view-insights" style="overflow:hidden;height:calc(100vh - 52px)">
+<div class="view" id="view-insights" style="overflow:hidden;height:calc(100vh - 52px);display:flex;flex-direction:column">
 
   <div class="ins-hero" style="padding:36px 32px 40px">
     <div class="ins-eyebrow">NATIN ICT · Keuzetool 2026</div>
@@ -386,7 +387,7 @@ body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink);f
         <div class="ins-card-right">
           <div class="ins-right-title">Verdeling over de klas</div>
           <div class="ins-right-sub">Voorlopige keuzes — nog niet definitief.</div>
-          <div style="position:relative;height:200px"><canvas id="ic1" role="img" aria-label="Keuze verdeling insight"></canvas></div>
+          <div style="flex:1;min-height:120px;max-height:220px;position:relative"><canvas id="ic1" role="img" aria-label="Keuze verdeling insight"></canvas></div>
         </div>
       </div>
 
@@ -409,7 +410,7 @@ body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink);f
         <div class="ins-card-right">
           <div class="ins-right-title">Student keuze vs. AI profiel</div>
           <div class="ins-right-sub">Groene balken = overeenstemming. Conflicten zijn de interessante gevallen.</div>
-          <div style="position:relative;height:160px"><canvas id="ic2" role="img" aria-label="Student vs AI profiel vergelijking"></canvas></div>
+          <div style="flex:1;min-height:100px;max-height:180px;position:relative"><canvas id="ic2" role="img" aria-label="Student vs AI profiel vergelijking"></canvas></div>
           <div style="margin-top:10px;padding:10px 12px;background:#f8f7f4;border-radius:8px;font-size:11px;color:var(--ink-2);line-height:1.5" id="i2-names">
             Conflicterende studenten laden…
           </div>
@@ -434,7 +435,7 @@ body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink);f
         <div class="ins-card-right">
           <div class="ins-right-title">AI-angst verdeling</div>
           <div class="ins-right-sub">Hoe sterk speelt angst voor AI mee als keuzeoverweging?</div>
-          <div style="position:relative;height:170px"><canvas id="ic3" role="img" aria-label="AI angst verdeling"></canvas></div>
+          <div style="flex:1;min-height:100px;max-height:190px;position:relative"><canvas id="ic3" role="img" aria-label="AI angst verdeling"></canvas></div>
         </div>
       </div>
 
@@ -508,6 +509,13 @@ function switchView(view, btn) {
   document.getElementById('view-' + view).classList.add('active');
   btn.classList.add('active');
   if (view === 'insights') initInsightNav();
+}
+
+function anoniem(naam) {
+  if (!naam || naam === '—') return '—';
+  const delen = naam.trim().split(' ');
+  if (delen.length === 1) return delen[0][0] + '.';
+  return delen[0][0] + '. ' + delen[delen.length-1];
 }
 
 async function loadData() {
@@ -670,7 +678,7 @@ function renderTable() {
     const profielBadge = profiel==='ao'?'b-ao':profiel==='ib'?'b-ib':profiel==='onduidelijk'?'b-nd':'b-nd';
     const matchIcon = isTw ? '<span style="color:var(--amber)">?</span>' : match ? '<span style="color:var(--ib)">✓</span>' : '<span style="color:var(--danger)">✗</span>';
     return `<tr class="${rowClass}">
-      <td style="font-weight:500">${r.naam||'—'}</td>
+      <td style="font-weight:500">${anoniem(r.naam)}</td>
       <td style="color:var(--ink-3);font-size:11px">${(r.klas||'').replace('PT ','')}</td>
       <td><span class="badge ${keuzeBadge}">${keuze.toUpperCase()}</span></td>
       <td><span class="badge ${profielBadge}">${profiel}</span></td>
@@ -697,7 +705,7 @@ function renderInsightData(ao, ib, tw, total) {
   });
   document.getElementById('i2-conflict').textContent = conflicts.length;
   document.getElementById('i2-names').innerHTML = conflicts.length
-    ? conflicts.map(r => `<div style="padding:6px 0;border-bottom:1px solid var(--border)"><strong>${r.naam}</strong> kiest <strong>${classify(r.keuze).toUpperCase()}</strong> maar AI-profiel zegt <strong>${r.profiel}</strong></div>`).join('')
+    ? conflicts.map(r => `<div style="padding:6px 0;border-bottom:1px solid var(--border)"><strong>${anoniem(r.naam)}</strong> kiest <strong>${classify(r.keuze).toUpperCase()}</strong> maar AI-profiel zegt <strong>${r.profiel}</strong></div>`).join('')
     : '<span style="color:var(--ink-3)">Geen conflicten gevonden — student keuze en AI-profiel stemmen overeen.</span>';
 
   const scared = rawData.filter(r => r.angst === 'Behoorlijk' || r.angst === 'Heel sterk').length;
@@ -711,7 +719,7 @@ function renderInsightData(ao, ib, tw, total) {
     ? `"${firstQuote.motivatie || firstQuote.sessievraag || 'Geen motivatie ingevuld'}"` : '"Geen twijfelaars gevonden."';
   document.getElementById('i4-cards').innerHTML = doubters.slice(0,3).map(r =>
     `<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
-      <div style="font-weight:500;font-size:13px;margin-bottom:4px">${r.naam}</div>
+      <div style="font-weight:500;font-size:13px;margin-bottom:4px">${anoniem(r.naam)}</div>
       <div style="font-size:11px;color:var(--ink-3)">AI-profiel: ${r.profiel||'?'} · Angst: ${r.angst||'?'}</div>
       <div style="font-size:12px;color:var(--ink-2);margin-top:6px;font-style:italic">"${r.sessievraag||'—'}"</div>
     </div>`).join('') || '<div style="color:var(--ink-3);font-size:13px">Geen twijfelaars.</div>';
@@ -730,7 +738,7 @@ async function runAIAnalysis() {
   panel.innerHTML = '<div style="padding:20px;text-align:center;color:var(--ink-3);font-size:13px">AI analyseert de klas…</div>';
   if (!rawData.length) { panel.innerHTML = '<div style="padding:20px;color:var(--ink-3);font-size:13px">Geen data beschikbaar.</div>'; return; }
 
-  const summary = rawData.map(r => `${r.naam}: keuze=${r.keuze}, profiel=${r.profiel}, angst=${r.angst}, motivatie="${r.motivatie||''}"`).join('\n');
+  const summary = rawData.map(r => `${anoniem(r.naam)}: keuze=${r.keuze}, profiel=${r.profiel}, angst=${r.angst}, motivatie="${r.motivatie||''}"`).join('\n');
   const prompt = `Je bent een loopbaanbegeleidingsassistent voor MBO ICT-docenten aan het NATIN in Suriname. Hieronder zijn de keuzetool-resultaten van een klas studenten die moeten kiezen tussen AO (Applicatieontwikkeling) en IB (Systeem- en Netwerkbeheer). Analyseer de resultaten en geef 3 gerichte inzichten in het Nederlands op B1-niveau. Elke insight: 1 zin conclusie + 1 zin aanbeveling voor de sessie. Wees specifiek, verwijs naar patronen in de data. Geef je antwoord als JSON: [{"label":"korte titel","conclusie":"...","aanbeveling":"...","type":"trend|waarschuwing|kans"}]\n\nDATA:\n${summary}`;
 
   try {
