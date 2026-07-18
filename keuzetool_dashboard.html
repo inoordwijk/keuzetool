@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keuzetool Dashboard — NATIN ICT</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --ink:#0f0f0f;
+  --ink-2:#3a3a38;
+  --ink-3:#888780;
+  --surface:#fafaf8;
+  --card:#ffffff;
+  --border:rgba(0,0,0,0.08);
+  --ao:#185FA5;
+  --ao-light:#E6F1FB;
+  --ib:#0D7B5A;
+  --ib-light:#E1F5EE;
+  --amber:#BA7517;
+  --amber-light:#FAEEDA;
+  --danger:#A32D2D;
+  --danger-light:#FCEBEB;
+  --r:12px;
+}
+
+body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink);font-size:15px;line-height:1.6;min-height:100vh}
+
+/* ── NAV ── */
+.nav{
+  background:#0f0f0f;
+  padding:14px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;
+}
+.nav-left{display:flex;align-items:center;gap:12px}
+.nav-badge{background:#E8A022;color:#412402;font-size:10px;font-weight:600;padding:3px 9px;border-radius:4px;letter-spacing:.05em}
+.nav-title{font-size:13px;color:rgba(255,255,255,.75);font-weight:400}
+.nav-right{display:flex;gap:8px;align-items:center}
+.nav-btn{font-size:12px;padding:7px 14px;border-radius:6px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.8);cursor:pointer;display:flex;align-items:center;gap:5px;font-family:inherit;transition:all .15s}
+.nav-btn:hover{background:rgba(255,255,255,.08)}
+.nav-btn.primary{background:#185FA5;border-color:#185FA5;color:#fff}
+.nav-btn.primary:hover{background:#1450893}
+
+/* ── VIEW TOGGLE ── */
+.view-toggle{
+  background:#0f0f0f;
+  padding:0 32px 16px;
+  display:flex;gap:4px;
+}
+.vt-btn{
+  font-size:13px;font-family:inherit;
+  padding:8px 18px;border-radius:6px;
+  border:1px solid rgba(255,255,255,.12);
+  background:transparent;color:rgba(255,255,255,.5);
+  cursor:pointer;transition:all .2s;
+}
+.vt-btn.active{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.25)}
+
+/* ── VIEWS ── */
+.view{display:none}
+.view.active{display:block}
+
+/* ══════════════════════════════
+   OVERVIEW VIEW
+══════════════════════════════ */
+.ov-body{padding:24px 32px 60px;max-width:1100px;margin:0 auto}
+
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px 18px}
+.kpi-label{font-size:11px;color:var(--ink-3);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.kpi-val{font-size:32px;font-weight:500;line-height:1}
+.kpi-sub{font-size:12px;color:var(--ink-3);margin-top:5px}
+.kpi-bar{height:3px;background:#eee;border-radius:2px;margin-top:10px;overflow:hidden}
+.kpi-fill{height:100%;border-radius:2px;transition:width .5s}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px}
+.card-title{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:4px}
+.card-desc{font-size:11px;color:var(--ink-3);margin-bottom:14px;line-height:1.5;padding-left:8px;border-left:2px solid #e0ded6}
+
+.leg{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+.li{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink-2)}
+.ld{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+
+/* ai panel */
+.ai-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:24px}
+.ai-panel-header{background:#0f0f0f;padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.ai-panel-title{font-size:13px;font-weight:500;color:#fff;display:flex;align-items:center;gap:8px}
+.ai-panel-title svg{opacity:.6}
+.ai-panel-body{padding:18px;display:flex;flex-direction:column;gap:10px}
+.ai-insight{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px}
+.ai-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:4px;margin:6px 3px 0 0;font-weight:500}
+
+/* student table */
+.tbl-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.stbl{width:100%;border-collapse:collapse;font-size:12px}
+.stbl th{text-align:left;padding:10px 14px;color:var(--ink-3);font-weight:500;font-size:11px;border-bottom:1px solid var(--border);background:var(--surface)}
+.stbl td{padding:10px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+.stbl tr:last-child td{border-bottom:none}
+.stbl tr.warn{background:#fffbf0}
+.stbl tr.danger{background:#fff5f5}
+.badge{font-size:10px;padding:2px 8px;border-radius:4px;font-weight:500;display:inline-block}
+.b-ao{background:var(--ao-light);color:#0C447C}
+.b-ib{background:var(--ib-light);color:#085041}
+.b-tw{background:var(--amber-light);color:#633806}
+.b-nd{background:#f1efe8;color:#5F5E5A}
+.b-conflict{background:var(--danger-light);color:#791F1F}
+
+.sec-label{font-size:11px;font-weight:500;color:var(--ink-3);letter-spacing:.06em;text-transform:uppercase;margin:24px 0 12px;display:flex;align-items:center;gap:6px}
+
+/* ══════════════════════════════
+   INSIGHTS VIEW — hard-questions style
+══════════════════════════════ */
+.ins-hero{
+  background:#0f0f0f;
+  padding:64px 32px 80px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.ins-hero::before{
+  content:'';
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(24,95,165,.25) 0%,transparent 70%);
+}
+.ins-eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:16px;position:relative}
+.ins-h1{
+  font-family:'DM Serif Display',serif;
+  font-size:52px;font-weight:400;line-height:1.1;
+  color:#fff;
+  max-width:600px;margin:0 auto 20px;
+  position:relative;
+}
+.ins-h1 em{font-style:italic;color:rgba(255,255,255,.5)}
+.ins-sub{font-size:16px;color:rgba(255,255,255,.5);max-width:420px;margin:0 auto;line-height:1.6;position:relative}
+
+/* scroll track */
+.ins-track-wrap{position:relative;margin:0 0 0 0;overflow:hidden}
+.ins-track{
+  display:flex;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+  gap:0;
+  scrollbar-width:none;
+  padding:0;
+}
+.ins-track::-webkit-scrollbar{display:none}
+
+.ins-card{
+  flex:0 0 100vw;
+  min-height:calc(100vh - 180px);
+  scroll-snap-align:start;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0;
+}
+.ins-card-left{
+  background:#0f0f0f;
+  padding:64px 48px;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.ins-card-right{
+  background:var(--surface);
+  padding:48px;
+  display:flex;flex-direction:column;justify-content:center;
+  border-left:1px solid rgba(0,0,0,.08);
+}
+.ins-num{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:12px}
+.ins-q{
+  font-family:'DM Serif Display',serif;
+  font-size:36px;font-weight:400;line-height:1.2;
+  color:#fff;margin-bottom:20px;
+}
+.ins-q em{font-style:italic;color:rgba(255,255,255,.45)}
+.ins-body{font-size:14px;color:rgba(255,255,255,.6);line-height:1.75;max-width:380px}
+.ins-finding{
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;
+  padding:16px 18px;
+  margin-top:24px;
+}
+.ins-finding-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:6px}
+.ins-finding-val{font-family:'DM Serif Display',serif;font-size:42px;color:#fff;line-height:1}
+.ins-finding-sub{font-size:12px;color:rgba(255,255,255,.4);margin-top:4px}
+
+.ins-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.ins-tag{font-size:11px;padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.5)}
+.ins-tag.highlight{background:rgba(24,95,165,.25);border-color:rgba(24,95,165,.4);color:#85B7EB}
+
+.ins-right-title{font-size:13px;font-weight:500;color:var(--ink-2);margin-bottom:6px}
+.ins-right-sub{font-size:12px;color:var(--ink-3);margin-bottom:20px;line-height:1.5}
+
+/* scroll nav */
+.ins-nav{
+  background:#0f0f0f;
+  padding:16px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.ins-dots{display:flex;gap:8px;align-items:center}
+.ins-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:all .2s}
+.ins-dot.active{background:#fff;width:20px;border-radius:3px}
+.ins-arrow{background:transparent;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);padding:8px 16px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:13px;transition:all .15s;display:flex;align-items:center;gap:6px}
+.ins-arrow:hover{background:rgba(255,255,255,.08)}
+.ins-arrow:disabled{opacity:.3;cursor:default}
+.ins-progress{font-size:12px;color:rgba(255,255,255,.3)}
+
+/* quote block */
+.quote-block{border-left:2px solid rgba(255,255,255,.15);padding-left:16px;margin:16px 0;font-size:14px;color:rgba(255,255,255,.5);font-style:italic;line-height:1.7}
+
+@media(max-width:700px){
+  .kpi-row{grid-template-columns:1fr 1fr}
+  .grid2,.grid3{grid-template-columns:1fr}
+  .ins-card{grid-template-columns:1fr}
+  .ins-card-right{display:none}
+  .ins-h1{font-size:36px}
+  .ins-q{font-size:28px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-left">
+    <span class="nav-badge">NATIN ICT</span>
+    <span class="nav-title">Keuzetool — docenten dashboard</span>
+  </div>
+  <div class="nav-right">
+    <span id="last-update" style="font-size:11px;color:rgba(255,255,255,.3)">Laden…</span>
+    <button class="nav-btn" onclick="loadData()">↻ Ververs</button>
+    <button class="nav-btn primary" onclick="runAIAnalysis()">✦ Analyseer klas</button>
+  </div>
+</nav>
+
+<!-- VIEW TOGGLE -->
+<div class="view-toggle">
+  <button class="vt-btn active" onclick="switchView('overview',this)">Overzicht</button>
+  <button class="vt-btn" onclick="switchView('insights',this)">Insights</button>
+</div>
+
+<!-- ══════════════════════════════
+     OVERVIEW VIEW
+══════════════════════════════ -->
+<div class="view active" id="view-overview">
+<div class="ov-body">
+
+  <!-- KPI -->
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi-label">&#128100; Ingevuld</div>
+      <div class="kpi-val" id="kpi-total">—</div>
+      <div class="kpi-sub" id="kpi-total-sub">van 41 studenten</div>
+      <div class="kpi-bar"><div class="kpi-fill" id="kpi-total-bar" style="background:#888780"></div></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label" style="color:var(--ao)">&#9654; Kiest AO</div>
+      <div class="kpi-val" id="kpi-ao" style="color:var(--ao)">—</div>
+      <div class="kpi-sub" id="kpi-ao-sub">—</div>
+      <div class="kpi-bar"><div class="kpi-fill" id="kpi-ao-bar" style="background:var(--ao)"></div></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label" style="color:var(--ib)">&#9632; Kiest IB</div>
+      <div class="kpi-val" id="kpi-ib" style="color:var(--ib)">—</div>
+      <div class="kpi-sub" id="kpi-ib-sub">—</div>
+      <div class="kpi-bar"><div class="kpi-fill" id="kpi-ib-bar" style="background:var(--ib)"></div></div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label" style="color:var(--amber)">? Twijfelt</div>
+      <div class="kpi-val" id="kpi-tw" style="color:var(--amber)">—</div>
+      <div class="kpi-sub" id="kpi-tw-sub">—</div>
+      <div class="kpi-bar"><div class="kpi-fill" id="kpi-tw-bar" style="background:var(--amber)"></div></div>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW 1 -->
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Keuze verdeling</div>
+      <div class="card-desc">Verhouding AO / IB / Twijfel over alle inzendingen.</div>
+      <div class="leg" id="leg-1"></div>
+      <div style="position:relative;height:200px"><canvas id="c-pie" role="img" aria-label="Donut keuze verdeling"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Student vs. AI profiel</div>
+      <div class="card-desc">Vergelijking keuze en AI-profiel richting. Afwijkingen = gespreksstarters.</div>
+      <div class="leg">
+        <div class="li"><div class="ld" style="background:#185FA5"></div> Student keuze</div>
+        <div class="li"><div class="ld" style="background:#1baf7a"></div> AI profiel</div>
+      </div>
+      <div style="position:relative;height:200px"><canvas id="c-cmp" role="img" aria-label="Vergelijking student vs AI profiel"></canvas></div>
+    </div>
+  </div>
+
+  <!-- CHARTS ROW 2 -->
+  <div class="grid3">
+    <div class="card">
+      <div class="card-title">AI-angst als driver</div>
+      <div class="card-desc">Mate waarin angst de keuze beïnvloedt.</div>
+      <div style="position:relative;height:170px"><canvas id="c-angst" role="img" aria-label="AI-angst scores"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Overeenstemming</div>
+      <div class="card-desc">Student keuze vs. AI-profiel richting.</div>
+      <div class="leg" id="leg-match"></div>
+      <div style="position:relative;height:140px"><canvas id="c-match" role="img" aria-label="Overeenstemming student AI"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Inzendingen over tijd</div>
+      <div class="card-desc">Wanneer studenten de tool invulden.</div>
+      <div style="position:relative;height:170px"><canvas id="c-time" role="img" aria-label="Inzendingen per dag"></canvas></div>
+    </div>
+  </div>
+
+  <!-- AI ANALYSE -->
+  <div class="sec-label">✦ AI-analyse van de klas</div>
+  <div class="ai-panel">
+    <div class="ai-panel-header">
+      <div class="ai-panel-title">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l2 6h6l-5 4 2 6-5-4-5 4 2-6-5-4h6z"/></svg>
+        Klasoverzicht — AI-gegenereerde analyse
+      </div>
+      <button class="nav-btn" onclick="runAIAnalysis()" style="font-size:11px;padding:5px 11px;">↻ Heranalyseer</button>
+    </div>
+    <div class="ai-panel-body" id="ai-insights">
+      <div style="padding:20px;text-align:center;color:var(--ink-3);font-size:13px;">Klik "Analyseer klas" om een AI-analyse te genereren op basis van alle inzendingen.</div>
+    </div>
+  </div>
+
+  <!-- STUDENT TABLE -->
+  <div class="sec-label">Studentenoverzicht</div>
+  <div class="tbl-wrap">
+    <table class="stbl">
+      <thead>
+        <tr>
+          <th>Student</th><th>Klas</th><th>Keuze</th><th>AI profiel</th>
+          <th>AI-angst</th><th>Match</th><th>Sessievraag</th>
+        </tr>
+      </thead>
+      <tbody id="student-tbody">
+        <tr><td colspan="7" style="text-align:center;padding:20px;color:var(--ink-3);font-size:13px;">Data laden…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</div>
+
+<!-- ══════════════════════════════
+     INSIGHTS VIEW
+══════════════════════════════ -->
+<div class="view" id="view-insights">
+
+  <div class="ins-hero">
+    <div class="ins-eyebrow">NATIN ICT · Keuzetool 2026</div>
+    <h1 class="ins-h1">Wat drijft de keuze van <em>jouw</em> studenten?</h1>
+    <p class="ins-sub">Scroll door de inzichten. Elk scherm is één vraag over de data.</p>
+  </div>
+
+  <div class="ins-track-wrap">
+    <div class="ins-track" id="ins-track">
+
+      <!-- INSIGHT 1: keuze verdeling -->
+      <div class="ins-card">
+        <div class="ins-card-left">
+          <div class="ins-num">01 / 05</div>
+          <h2 class="ins-q">Welke richting kiest de klas <em>op dit moment?</em></h2>
+          <p class="ins-body">Dit is de ruwe voorkeur, nog vóór de sessie. Meer dan de helft neigt naar AO. Maar neigen is niet kiezen — de sessie is er juist voor om dit te verdiepen.</p>
+          <div class="ins-finding">
+            <div class="ins-finding-label">Meest gekozen richting</div>
+            <div class="ins-finding-val" id="i1-dominant">AO</div>
+            <div class="ins-finding-sub" id="i1-pct">—% van de inzendingen</div>
+          </div>
+          <div class="ins-tags" id="i1-tags"></div>
+        </div>
+        <div class="ins-card-right">
+          <div class="ins-right-title">Verdeling over de klas</div>
+          <div class="ins-right-sub">Voorlopige keuzes — nog niet definitief.</div>
+          <div style="position:relative;height:260px"><canvas id="ic1" role="img" aria-label="Keuze verdeling insight"></canvas></div>
+        </div>
+      </div>
+
+      <!-- INSIGHT 2: student vs AI -->
+      <div class="ins-card">
+        <div class="ins-card-left">
+          <div class="ins-num">02 / 05</div>
+          <h2 class="ins-q">Wie kiest anders dan hun <em>instinct</em> suggereert?</h2>
+          <p class="ins-body">Het AI-profiel is gebaseerd op scenario's en schuifjes — impulsieve reacties. Als dat verschilt van de bewuste keuze, zit er iets tussen. Sociale druk. Twijfel. Onzekerheid over de toekomst.</p>
+          <div class="ins-finding">
+            <div class="ins-finding-label">Conflicterende gevallen</div>
+            <div class="ins-finding-val" id="i2-conflict">—</div>
+            <div class="ins-finding-sub">studenten waarbij keuze ≠ AI-profiel</div>
+          </div>
+          <div class="ins-tags">
+            <span class="ins-tag highlight">Prioriteit in de sessie</span>
+            <span class="ins-tag">Sociaal beïnvloed?</span>
+          </div>
+        </div>
+        <div class="ins-card-right">
+          <div class="ins-right-title">Student keuze vs. AI profiel</div>
+          <div class="ins-right-sub">Groene balken = overeenstemming. Conflicten zijn de interessante gevallen.</div>
+          <div style="position:relative;height:200px"><canvas id="ic2" role="img" aria-label="Student vs AI profiel vergelijking"></canvas></div>
+          <div style="margin-top:16px;padding:12px;background:#f8f7f4;border-radius:8px;font-size:12px;color:var(--ink-2);line-height:1.6" id="i2-names">
+            Conflicterende studenten laden…
+          </div>
+        </div>
+      </div>
+
+      <!-- INSIGHT 3: AI angst -->
+      <div class="ins-card">
+        <div class="ins-card-left">
+          <div class="ins-num">03 / 05</div>
+          <h2 class="ins-q">Hoeveel studenten kiezen <em>uit angst</em> voor AI?</h2>
+          <p class="ins-body">AI-angst is een verborgen keuzedriver. Studenten die beweren dat AO "gevaarlijk" is en daarom voor IB kiezen, maken geen authentieke keuze. Bespreek dit vroeg in de sessie — anders bouw je op een vals fundament.</p>
+          <div class="ins-finding">
+            <div class="ins-finding-label">Angst speelt "behoorlijk" of "heel sterk" mee</div>
+            <div class="ins-finding-val" id="i3-scared">—</div>
+            <div class="ins-finding-sub" id="i3-scared-pct">studenten</div>
+          </div>
+          <div class="ins-tags">
+            <span class="ins-tag">Bespreek als eerste in sessie</span>
+          </div>
+        </div>
+        <div class="ins-card-right">
+          <div class="ins-right-title">AI-angst verdeling</div>
+          <div class="ins-right-sub">Hoe sterk speelt angst voor AI mee als keuzeoverweging?</div>
+          <div style="position:relative;height:220px"><canvas id="ic3" role="img" aria-label="AI angst verdeling"></canvas></div>
+        </div>
+      </div>
+
+      <!-- INSIGHT 4: twijfelaars -->
+      <div class="ins-card">
+        <div class="ins-card-left">
+          <div class="ins-num">04 / 05</div>
+          <h2 class="ins-q">Wie twijfelt nog — en <em>waarom</em>?</h2>
+          <p class="ins-body">Twijfelaars zijn de primaire doelgroep van de sessie. Maar twijfel heeft een oorzaak. Kijk naar hun scenario-antwoorden: volgen ze hun instinct (infra) of hun ambitie (bouwen)? Dat conflict is de kern van hun gesprek.</p>
+          <div class="ins-finding">
+            <div class="ins-finding-label">Twijfelaars</div>
+            <div class="ins-finding-val" id="i4-doubt">—</div>
+            <div class="ins-finding-sub">studenten geven geen richting aan</div>
+          </div>
+          <div class="quote-block" id="i4-quote">"—"</div>
+        </div>
+        <div class="ins-card-right">
+          <div class="ins-right-title">Twijfelaars — profiel</div>
+          <div class="ins-right-sub">Hun AI-profiel vs. wat ze zelf zeggen.</div>
+          <div id="i4-cards" style="display:flex;flex-direction:column;gap:10px;margin-top:8px"></div>
+        </div>
+      </div>
+
+      <!-- INSIGHT 5: niet ingevuld -->
+      <div class="ins-card">
+        <div class="ins-card-left">
+          <div class="ins-num">05 / 05</div>
+          <h2 class="ins-q">Wie heeft de tool <em>nog niet</em> ingevuld?</h2>
+          <p class="ins-body">Niet-invullers zijn een blinde vlek. Ze komen de sessie in zonder voorbereiding — en zonder dat jij weet waar ze staan. Stuur een herinnering of bespreek ze apart aan het begin.</p>
+          <div class="ins-finding">
+            <div class="ins-finding-label">Nog niet ingevuld</div>
+            <div class="ins-finding-val" id="i5-missing">—</div>
+            <div class="ins-finding-sub">van de 41 studenten</div>
+          </div>
+          <div class="ins-tags" id="i5-tags"></div>
+        </div>
+        <div class="ins-card-right">
+          <div class="ins-right-title">Wie ontbreekt nog?</div>
+          <div class="ins-right-sub">Op basis van de klassenlijst.</div>
+          <div id="i5-missing-list" style="font-size:12px;color:var(--ink-2);line-height:2;columns:2;gap:16px;margin-top:8px"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SCROLL NAV -->
+  <div class="ins-nav">
+    <button class="ins-arrow" id="btn-prev" onclick="scrollInsight(-1)" disabled>← Vorige</button>
+    <div style="display:flex;align-items:center;gap:16px">
+      <div class="ins-dots" id="ins-dots"></div>
+      <span class="ins-progress" id="ins-progress">1 / 5</span>
+    </div>
+    <button class="ins-arrow" id="btn-next" onclick="scrollInsight(1)">Volgende →</button>
+  </div>
+
+</div>
+
+<script>
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxcGkK4MczzjE0L0fmqrBagCWXG6CVsPSdzMXrUd9yuJ1Np_PeeTpSXQsXByPfkUQI/exec';
+const TOTAL_STUDENTS = 41;
+const ALL_STUDENTS = ["Abauna Angelo","Amina Antonius","Ansoe Jahmiel","April Jadon","Asaiti Kerfons","Biezen Ashley","Caffe Richano","Ceder Calvin","Cheuk - A - Lam Georgio","Chitan Jeetish","Dhawtal Adithya","Dijokromo Shakira","Domini Seth","Garib Rewien","Glen Joshua","Helstone Nigel","Hofwijk Jadan","Jagdew Akshay","Jagdew Shayed","Julen Manuel","Koebeer Cherano","Kromoredjo Keanu","Lakhichand Ayush","Lew Michah","Lioni Donaphan","Martosoewiknjo Bryon","Nelis Sygourney","Neral Nathan","Persaud Trevon","Ragghu Suryan","Raghoenath Shivist","Ramanand Varun","Rogers Trinity","Sandvliet Leroy","Sanoesi Jason","Soediono Collin","Soerobongso Delion","Sordam Jardel","Terborg Alex","Winter Venice","Yflaar Berwiek"];
+
+let rawData = [];
+let charts = {};
+let currentInsight = 0;
+const TOTAL_INSIGHTS = 5;
+
+function switchView(view, btn) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.vt-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  btn.classList.add('active');
+  if (view === 'insights') initInsightNav();
+}
+
+async function loadData() {
+  document.getElementById('last-update').textContent = 'Laden…';
+  try {
+    const url = GAS_URL + '?type=dashboard';
+    const resp = await fetch(url, { mode: 'cors' });
+    const json = await resp.json();
+    if (json.rows) {
+      rawData = json.rows;
+      renderAll();
+      document.getElementById('last-update').textContent = 'Bijgewerkt: ' + new Date().toLocaleTimeString('nl-NL');
+    }
+  } catch(e) {
+    useDemoData();
+  }
+}
+
+function useDemoData() {
+  rawData = [
+    { naam:'Abauna Angelo', klas:'PT 2.06.01', keuze:'AO — Applicatieontwikkeling', profiel:'ao', angst:'Een beetje', sessievraag:'Wat voor apps wil jij bouwen?' },
+    { naam:'Dhawtal Adithya', klas:'PT 2.06.01', keuze:'IB — Systeem- en Netwerkbeheer', profiel:'ib', angst:'Helemaal niet', sessievraag:'Ethical hacking of verdedigen?' },
+    { naam:'Nelis Sygourney', klas:'PT 2.06.02', keuze:'AO — Applicatieontwikkeling', profiel:'ao', angst:'Een beetje', sessievraag:'Welk probleem wil jij oplossen?' },
+    { naam:'Glen Joshua', klas:'PT 2.06.02', keuze:'IB — Systeem- en Netwerkbeheer', profiel:'ib', angst:'Helemaal niet', sessievraag:'Security of beheer?' },
+    { naam:'Sordam Jardel', klas:'PT 2.06.02', keuze:'Twijfel', profiel:'onduidelijk', angst:'Behoorlijk', sessievraag:'Wat houdt jou tegen?' },
+    { naam:'Winter Venice', klas:'PT 2.06.01', keuze:'AO — Applicatieontwikkeling', profiel:'ib', angst:'Heel sterk', sessievraag:'Kies je voor passie of zekerheid?' },
+    { naam:'Raghoenath Shivist', klas:'PT 2.06.01', keuze:'AO — Applicatieontwikkeling', profiel:'ao', angst:'Een beetje', sessievraag:'Frontend of backend?' },
+  ];
+  renderAll();
+  document.getElementById('last-update').textContent = 'Demo data (GAS niet bereikbaar)';
+}
+
+function classify(keuze) {
+  if (!keuze) return 'onbekend';
+  const k = keuze.toLowerCase();
+  if (k.includes('ao') || k === 'ao') return 'ao';
+  if (k.includes('ib') || k === 'ib') return 'ib';
+  if (k.includes('twijfel') || k.includes('doubt')) return 'twijfel';
+  return 'onbekend';
+}
+
+function renderAll() {
+  const total = rawData.length;
+  const ao = rawData.filter(r => classify(r.keuze) === 'ao').length;
+  const ib = rawData.filter(r => classify(r.keuze) === 'ib').length;
+  const tw = rawData.filter(r => classify(r.keuze) === 'twijfel').length;
+
+  const pct = (n) => total ? Math.round(n/total*100) : 0;
+  const totPct = Math.round(total/TOTAL_STUDENTS*100);
+
+  document.getElementById('kpi-total').textContent = total;
+  document.getElementById('kpi-total-sub').textContent = `van ${TOTAL_STUDENTS} studenten · ${totPct}%`;
+  document.getElementById('kpi-total-bar').style.width = totPct + '%';
+  document.getElementById('kpi-ao').textContent = ao;
+  document.getElementById('kpi-ao-sub').textContent = pct(ao) + '% van ingevuld';
+  document.getElementById('kpi-ao-bar').style.width = pct(ao) + '%';
+  document.getElementById('kpi-ib').textContent = ib;
+  document.getElementById('kpi-ib-sub').textContent = pct(ib) + '% van ingevuld';
+  document.getElementById('kpi-ib-bar').style.width = pct(ib) + '%';
+  document.getElementById('kpi-tw').textContent = tw;
+  document.getElementById('kpi-tw-sub').textContent = pct(tw) + '% van ingevuld';
+  document.getElementById('kpi-tw-bar').style.width = pct(tw) + '%';
+
+  renderCharts(ao, ib, tw, total);
+  renderTable();
+  renderInsightData(ao, ib, tw, total);
+}
+
+function mkChart(id, type, data, options) {
+  if (charts[id]) charts[id].destroy();
+  const ctx = document.getElementById(id);
+  if (!ctx) return;
+  charts[id] = new Chart(ctx, { type, data, options });
+}
+
+function renderCharts(ao, ib, tw, total) {
+  const G = 'rgba(128,128,128,0.08)', T = '#888780';
+  const base = { responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} } };
+
+  const aiAO = rawData.filter(r => r.profiel === 'ao').length;
+  const aiIB = rawData.filter(r => r.profiel === 'ib').length;
+  const aiOnd = rawData.filter(r => r.profiel === 'onduidelijk').length;
+  const n1 = rawData.filter(r => r.angst === 'Helemaal niet').length;
+  const n2 = rawData.filter(r => r.angst === 'Een beetje').length;
+  const n3 = rawData.filter(r => r.angst === 'Behoorlijk').length;
+  const n4 = rawData.filter(r => r.angst === 'Heel sterk').length;
+  const eensAO = rawData.filter(r => classify(r.keuze)==='ao' && r.profiel==='ao').length;
+  const eensIB = rawData.filter(r => classify(r.keuze)==='ib' && r.profiel==='ib').length;
+  const oneens = total - eensAO - eensIB - tw;
+
+  document.getElementById('leg-1').innerHTML = [
+    ['#185FA5',`AO ${ao}`],['#0D7B5A',`IB ${ib}`],['#BA7517',`Twijfel ${tw}`]
+  ].map(([c,l]) => `<div class="li"><div class="ld" style="background:${c}"></div>${l}</div>`).join('');
+
+  document.getElementById('leg-match').innerHTML = [
+    ['#185FA5','Eens AO'],['#0D7B5A','Eens IB'],['#BA7517','Twijfelt'],['#A32D2D','Oneens']
+  ].map(([c,l]) => `<div class="li"><div class="ld" style="background:${c}"></div>${l}</div>`).join('');
+
+  mkChart('c-pie','doughnut',
+    { labels:['AO','IB','Twijfel'], datasets:[{ data:[ao,ib,tw], backgroundColor:['#185FA5','#0D7B5A','#BA7517'], borderWidth:0 }] },
+    { ...base, cutout:'58%' });
+
+  mkChart('c-cmp','bar',
+    { labels:['AO','IB','Onduidelijk'],
+      datasets:[
+        { label:'Student', data:[ao,ib,tw], backgroundColor:'#2a78d6', borderRadius:4, barThickness:14 },
+        { label:'AI', data:[aiAO,aiIB,aiOnd], backgroundColor:'#1baf7a', borderRadius:4, barThickness:14 }
+      ]},
+    { ...base, scales:{ x:{grid:{color:G},ticks:{color:T}}, y:{grid:{color:G},ticks:{color:T},beginAtZero:true} }});
+
+  mkChart('c-angst','bar',
+    { labels:['Helemaal niet','Een beetje','Behoorlijk','Heel sterk'],
+      datasets:[{ data:[n1,n2,n3,n4], backgroundColor:['#0D7B5A','#0D7B5A','#BA7517','#A32D2D'], borderRadius:4 }]},
+    { ...base, indexAxis:'y', scales:{ x:{grid:{color:G},ticks:{color:T},beginAtZero:true}, y:{grid:{display:false},ticks:{color:T,font:{size:11}}} }});
+
+  mkChart('c-match','doughnut',
+    { labels:['Eens AO','Eens IB','Twijfelt','Oneens'], datasets:[{ data:[eensAO,eensIB,tw,Math.max(0,oneens)], backgroundColor:['#185FA5','#0D7B5A','#BA7517','#A32D2D'], borderWidth:0 }]},
+    { ...base, cutout:'52%' });
+
+  const byDay = {};
+  rawData.forEach(r => {
+    const d = r.timestamp ? new Date(r.timestamp).toLocaleDateString('nl-NL',{weekday:'short'}) : '?';
+    byDay[d] = (byDay[d]||0) + 1;
+  });
+  mkChart('c-time','line',
+    { labels:Object.keys(byDay), datasets:[{ data:Object.values(byDay), borderColor:'#2a78d6', backgroundColor:'rgba(42,120,214,0.06)', borderWidth:2, pointBackgroundColor:'#2a78d6', pointRadius:4, tension:0.3, fill:true }]},
+    { ...base, scales:{ x:{grid:{display:false},ticks:{color:T}}, y:{grid:{color:G},ticks:{color:T,stepSize:1},beginAtZero:true} }});
+
+  mkChart('ic1','doughnut',
+    { labels:['AO','IB','Twijfel'], datasets:[{ data:[ao,ib,tw], backgroundColor:['#185FA5','#0D7B5A','#BA7517'], borderWidth:0 }]},
+    { ...base, cutout:'55%' });
+
+  mkChart('ic2','bar',
+    { labels:['AO','IB','Onduidelijk'],
+      datasets:[
+        { label:'Student', data:[ao,ib,tw], backgroundColor:'rgba(42,120,214,0.7)', borderRadius:4, barThickness:18 },
+        { label:'AI', data:[aiAO,aiIB,aiOnd], backgroundColor:'rgba(27,175,122,0.7)', borderRadius:4, barThickness:18 }
+      ]},
+    { ...base, scales:{ x:{grid:{color:'rgba(255,255,255,0.06)'},ticks:{color:'rgba(255,255,255,0.4)'}}, y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'rgba(255,255,255,0.4)'},beginAtZero:true} }});
+
+  mkChart('ic3','bar',
+    { labels:['Helemaal niet','Een beetje','Behoorlijk','Heel sterk'],
+      datasets:[{ data:[n1,n2,n3,n4], backgroundColor:['rgba(27,175,122,0.7)','rgba(27,175,122,0.7)','rgba(186,117,23,0.7)','rgba(163,45,45,0.7)'], borderRadius:4 }]},
+    { ...base, indexAxis:'y', scales:{ x:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{color:'rgba(255,255,255,0.4)'},beginAtZero:true}, y:{grid:{display:false},ticks:{color:'rgba(255,255,255,0.4)',font:{size:11}}} }});
+}
+
+function renderTable() {
+  const tbody = document.getElementById('student-tbody');
+  if (!rawData.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--ink-3)">Geen data</td></tr>';
+    return;
+  }
+  tbody.innerHTML = rawData.map(r => {
+    const keuze = classify(r.keuze);
+    const profiel = r.profiel || 'onbekend';
+    const match = keuze === profiel;
+    const isTw = keuze === 'twijfel';
+    const rowClass = isTw ? 'warn' : (!match && !isTw) ? 'danger' : '';
+    const keuzeBadge = keuze==='ao'?'b-ao':keuze==='ib'?'b-ib':keuze==='twijfel'?'b-tw':'b-nd';
+    const profielBadge = profiel==='ao'?'b-ao':profiel==='ib'?'b-ib':profiel==='onduidelijk'?'b-nd':'b-nd';
+    const matchIcon = isTw ? '<span style="color:var(--amber)">?</span>' : match ? '<span style="color:var(--ib)">✓</span>' : '<span style="color:var(--danger)">✗</span>';
+    return `<tr class="${rowClass}">
+      <td style="font-weight:500">${r.naam||'—'}</td>
+      <td style="color:var(--ink-3);font-size:11px">${(r.klas||'').replace('PT ','')}</td>
+      <td><span class="badge ${keuzeBadge}">${keuze.toUpperCase()}</span></td>
+      <td><span class="badge ${profielBadge}">${profiel}</span></td>
+      <td style="font-size:12px;color:var(--ink-2)">${r.angst||'—'}</td>
+      <td>${matchIcon}</td>
+      <td style="font-size:11px;color:var(--ink-3);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.sessievraag||''}">${r.sessievraag||'—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderInsightData(ao, ib, tw, total) {
+  const dom = ao >= ib ? 'AO' : 'IB';
+  const domPct = total ? Math.round(Math.max(ao,ib)/total*100) : 0;
+  document.getElementById('i1-dominant').textContent = dom;
+  document.getElementById('i1-pct').textContent = domPct + '% van de inzendingen';
+  document.getElementById('i1-tags').innerHTML = `
+    <span class="ins-tag highlight">AO: ${ao} studenten</span>
+    <span class="ins-tag">IB: ${ib} studenten</span>
+    <span class="ins-tag">Twijfel: ${tw} studenten</span>`;
+
+  const conflicts = rawData.filter(r => {
+    const k = classify(r.keuze);
+    return k !== 'twijfel' && k !== r.profiel && r.profiel && r.profiel !== 'onduidelijk';
+  });
+  document.getElementById('i2-conflict').textContent = conflicts.length;
+  document.getElementById('i2-names').innerHTML = conflicts.length
+    ? conflicts.map(r => `<div style="padding:6px 0;border-bottom:1px solid var(--border)"><strong>${r.naam}</strong> kiest <strong>${classify(r.keuze).toUpperCase()}</strong> maar AI-profiel zegt <strong>${r.profiel}</strong></div>`).join('')
+    : '<span style="color:var(--ink-3)">Geen conflicten gevonden — student keuze en AI-profiel stemmen overeen.</span>';
+
+  const scared = rawData.filter(r => r.angst === 'Behoorlijk' || r.angst === 'Heel sterk').length;
+  document.getElementById('i3-scared').textContent = scared;
+  document.getElementById('i3-scared-pct').textContent = `van de ${total} studenten (${total ? Math.round(scared/total*100) : 0}%)`;
+
+  const doubters = rawData.filter(r => classify(r.keuze) === 'twijfel');
+  document.getElementById('i4-doubt').textContent = doubters.length;
+  const firstQuote = doubters[0];
+  document.getElementById('i4-quote').textContent = firstQuote
+    ? `"${firstQuote.motivatie || firstQuote.sessievraag || 'Geen motivatie ingevuld'}"` : '"Geen twijfelaars gevonden."';
+  document.getElementById('i4-cards').innerHTML = doubters.slice(0,3).map(r =>
+    `<div style="background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px">
+      <div style="font-weight:500;font-size:13px;margin-bottom:4px">${r.naam}</div>
+      <div style="font-size:11px;color:var(--ink-3)">AI-profiel: ${r.profiel||'?'} · Angst: ${r.angst||'?'}</div>
+      <div style="font-size:12px;color:var(--ink-2);margin-top:6px;font-style:italic">"${r.sessievraag||'—'}"</div>
+    </div>`).join('') || '<div style="color:var(--ink-3);font-size:13px">Geen twijfelaars.</div>';
+
+  const ingevuld = new Set(rawData.map(r => r.naam));
+  const missing = ALL_STUDENTS.filter(n => !ingevuld.has(n));
+  document.getElementById('i5-missing').textContent = missing.length;
+  document.getElementById('i5-missing-list').innerHTML = missing.map(n =>
+    `<div style="padding:3px 0;color:var(--ink-2)">${n}</div>`).join('') || '<div style="color:var(--ink-3)">Iedereen heeft ingevuld.</div>';
+  document.getElementById('i5-tags').innerHTML = missing.slice(0,4).map(n =>
+    `<span class="ins-tag">${n.split(' ')[0]}</span>`).join('') + (missing.length > 4 ? `<span class="ins-tag">+${missing.length-4} meer</span>` : '');
+}
+
+async function runAIAnalysis() {
+  const panel = document.getElementById('ai-insights');
+  panel.innerHTML = '<div style="padding:20px;text-align:center;color:var(--ink-3);font-size:13px">AI analyseert de klas…</div>';
+  if (!rawData.length) { panel.innerHTML = '<div style="padding:20px;color:var(--ink-3);font-size:13px">Geen data beschikbaar.</div>'; return; }
+
+  const summary = rawData.map(r => `${r.naam}: keuze=${r.keuze}, profiel=${r.profiel}, angst=${r.angst}, motivatie="${r.motivatie||''}"`).join('\n');
+  const prompt = `Je bent een loopbaanbegeleidingsassistent voor MBO ICT-docenten aan het NATIN in Suriname. Hieronder zijn de keuzetool-resultaten van een klas studenten die moeten kiezen tussen AO (Applicatieontwikkeling) en IB (Systeem- en Netwerkbeheer). Analyseer de resultaten en geef 3 gerichte inzichten in het Nederlands op B1-niveau. Elke insight: 1 zin conclusie + 1 zin aanbeveling voor de sessie. Wees specifiek, verwijs naar patronen in de data. Geef je antwoord als JSON: [{"label":"korte titel","conclusie":"...","aanbeveling":"...","type":"trend|waarschuwing|kans"}]\n\nDATA:\n${summary}`;
+
+  try {
+    const url = GAS_URL + '?type=analyse&content=' + encodeURIComponent(prompt.substring(0,2000));
+    const resp = await fetch(url, { mode:'cors' });
+    const json = await resp.json();
+    const raw = (json.text||'').replace(/```json|```/g,'').trim();
+    const insights = JSON.parse(raw);
+    panel.innerHTML = insights.map(i => {
+      const colors = { trend:'#185FA5', waarschuwing:'#BA7517', kans:'#0D7B5A' };
+      const c = colors[i.type] || '#888';
+      return `<div class="ai-insight">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <span style="width:6px;height:6px;border-radius:50%;background:${c};flex-shrink:0"></span>
+          <span style="font-size:11px;font-weight:500;color:${c};text-transform:uppercase;letter-spacing:.06em">${i.label}</span>
+        </div>
+        <div style="font-size:13px;color:var(--ink);line-height:1.6;margin-bottom:8px">${i.conclusie}</div>
+        <div style="font-size:12px;color:var(--ink-2);background:var(--surface);padding:8px 12px;border-radius:6px;border-left:2px solid ${c}">${i.aanbeveling}</div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    panel.innerHTML = `<div style="padding:16px;color:var(--ink-3);font-size:13px">Analyse niet beschikbaar: ${e.message}</div>`;
+  }
+}
+
+function initInsightNav() {
+  const dots = document.getElementById('ins-dots');
+  dots.innerHTML = Array.from({length:TOTAL_INSIGHTS},(_,i) =>
+    `<div class="ins-dot ${i===0?'active':''}" onclick="goToInsight(${i})"></div>`).join('');
+  updateInsightNav();
+}
+
+function scrollInsight(dir) {
+  currentInsight = Math.max(0, Math.min(TOTAL_INSIGHTS-1, currentInsight+dir));
+  const track = document.getElementById('ins-track');
+  const cardW = track.querySelector('.ins-card').offsetWidth;
+  track.scrollTo({ left: currentInsight * cardW, behavior:'smooth' });
+  updateInsightNav();
+}
+
+function goToInsight(i) {
+  currentInsight = i;
+  const track = document.getElementById('ins-track');
+  const cardW = track.querySelector('.ins-card').offsetWidth;
+  track.scrollTo({ left: i * cardW, behavior:'smooth' });
+  updateInsightNav();
+}
+
+function updateInsightNav() {
+  document.querySelectorAll('.ins-dot').forEach((d,i) => d.classList.toggle('active', i===currentInsight));
+  document.getElementById('ins-progress').textContent = `${currentInsight+1} / ${TOTAL_INSIGHTS}`;
+  document.getElementById('btn-prev').disabled = currentInsight === 0;
+  document.getElementById('btn-next').disabled = currentInsight === TOTAL_INSIGHTS-1;
+}
+
+document.getElementById('ins-track')?.addEventListener('scroll', function() {
+  const cardW = this.querySelector('.ins-card')?.offsetWidth || 1;
+  currentInsight = Math.round(this.scrollLeft / cardW);
+  updateInsightNav();
+});
+
+loadData();
+initInsightNav();
+</script>
+</body>
+</html>
