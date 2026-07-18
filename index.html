@@ -757,19 +757,63 @@ input[type=text]:focus, select:focus { outline: none; border-color: var(--ao); }
 
     <div class="sec-label"><span class="material-icons-round">person</span> Jouw gegevens</div>
 
-    <span class="field-label">Naam</span>
-    <input type="text" id="studentName" placeholder="Voornaam en achternaam">
+    <span class="field-label">Jouw naam</span>
+    <select id="studentSelect" onchange="selectStudent(this.value)">
+      <option value="">— kies jouw naam —</option>
+      <optgroup label="PT 2.06.01">
+        <option value="1202416">Abauna Angelo</option>
+        <option value="12023151">Amina Antonius</option>
+        <option value="12023180">Asaiti Kerfons</option>
+        <option value="1202419">Biezen Ashley</option>
+        <option value="1202414">Caffe Richano</option>
+        <option value="1202460">Cheuk - A - Lam Georgio</option>
+        <option value="12023500">Dhawtal Adithya</option>
+        <option value="12023259">Dijokromo Shakira</option>
+        <option value="12022416">Domini Seth</option>
+        <option value="12023509">Hofwijk Jadan</option>
+        <option value="1202412">Jagdew Akshay</option>
+        <option value="1202417">Lakhichand Ayush</option>
+        <option value="1202423">Martosoewiknjo Bryon</option>
+        <option value="12023511">Persaud Trevon</option>
+        <option value="12022215">Raghoenath Shivist</option>
+        <option value="1202421">Ramanand Varun</option>
+        <option value="12023342">Sanoesi Jason</option>
+        <option value="12022129">Soerobongso Delion</option>
+        <option value="12021667">Winter Venice</option>
+        <option value="1202255">Yflaar Berwiek</option>
+      </optgroup>
+      <optgroup label="PT 2.06.02">
+        <option value="1202457">Ansoe Jahmiel</option>
+        <option value="1202418">April Jadon</option>
+        <option value="1202420">Ceder Calvin</option>
+        <option value="12023395">Chitan Jeetish</option>
+        <option value="1202425">Garib Rewien</option>
+        <option value="12024296">Glen Joshua</option>
+        <option value="1202459">Helstone Nigel</option>
+        <option value="1202411">Jagdew Shayed</option>
+        <option value="12022529">Julen Manuel</option>
+        <option value="1202415">Koebeer Cherano</option>
+        <option value="1202458">Kromoredjo Keanu</option>
+        <option value="12021314">Lew Michah</option>
+        <option value="1202424">Lioni Donaphan</option>
+        <option value="12022115">Nelis Sygourney</option>
+        <option value="12023164">Neral Nathan</option>
+        <option value="12023394">Ragghu Suryan</option>
+        <option value="1202456">Rogers Trinity</option>
+        <option value="12024295">Sandvliet Leroy</option>
+        <option value="12023484">Soediono Collin</option>
+        <option value="12021128">Sordam Jardel</option>
+        <option value="1202422">Terborg Alex</option>
+      </optgroup>
+    </select>
+    <input type="hidden" id="studentName">
 
     <span class="field-label">Klas</span>
-    <select id="studentKlas">
-      <option value="">— kies je klas —</option>
-      <option value="PT 2.06.01">PT 2.06.01</option>
-      <option value="PT 2.06.02">PT 2.06.02</option>
-    </select>
+    <input type="text" id="studentKlas" readonly style="background:var(--bg); color:var(--muted); cursor:default;" placeholder="Wordt automatisch ingevuld">
 
     <span class="field-label">E-mailadres</span>
-    <input type="email" id="studentEmail" placeholder="jouw.naam@email.com" style="width:100%; border:1px solid var(--border); border-radius:var(--radius-sm); padding:11px 14px; font-size:14px; font-family:inherit; color:var(--neutral); background:var(--card); box-sizing:border-box; margin-top:6px;">
-    <div style="font-size:12px; color:var(--color-text-tertiary); margin-top:4px;">Jouw profiel wordt naar dit adres gemaild na afloop.</div>
+    <input type="email" id="studentEmail" placeholder="Wordt automatisch ingevuld" style="width:100%; border:1px solid var(--border); border-radius:var(--radius-sm); padding:11px 14px; font-size:14px; font-family:inherit; color:var(--neutral); background:var(--card); box-sizing:border-box; margin-top:6px;">
+    <div style="font-size:12px; color:var(--color-text-tertiary); margin-top:4px;">Jouw profiel wordt naar dit adres gemaild na afloop. Je kunt het adres aanpassen als het niet klopt.</div>
 
     <div class="divider"></div>
     <div class="disclaimer">
@@ -1264,6 +1308,65 @@ input[type=text]:focus, select:focus { outline: none; border-color: var(--ao); }
 </div><!-- /main -->
 
 <script>
+const STUDENTEN = [
+  { id: "1202416", naam: "Abauna Angelo", email: "angelo.abauna@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "12023151", naam: "Amina Antonius", email: "antonius.amina@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "12023180", naam: "Asaiti Kerfons", email: "kerfons.asaiti@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "1202419", naam: "Biezen Ashley", email: "ashley.biezen@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "1202414", naam: "Caffe Richano", email: "richano.caffe@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "1202460", naam: "Cheuk - A - Lam Georgio", email: "georgio.cheukalam@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "12023500", naam: "Dhawtal Adithya", email: "adithya.dhawtal@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "12023259", naam: "Dijokromo Shakira", email: "shakira.dijokromo@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "12022416", naam: "Domini Seth", email: "seth.domini@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "12023509", naam: "Hofwijk Jadan", email: "jadan.hofwijk@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "1202412", naam: "Jagdew Akshay", email: "akshay.jagdew@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "1202417", naam: "Lakhichand Ayush", email: "ayush.lakhichand@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "1202423", naam: "Martosoewiknjo Bryon", email: "bryon.martosoewiknjo@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "12023511", naam: "Persaud Trevon", email: "trevon.persaud@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "12022215", naam: "Raghoenath Shivist", email: "shivist.raghoenath@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "1202421", naam: "Ramanand Varun", email: "varun.ramanand@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "12023342", naam: "Sanoesi Jason", email: "jason.sanoesi@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "12022129", naam: "Soerobongso Delion", email: "delion.soerobongso@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "12021667", naam: "Winter Venice", email: "venice.winter@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "1202255", naam: "Yflaar Berwiek", email: "berwiek.yflaar@student.natin.sr", klas: "PT 2.06.01" },
+  { id: "1202457", naam: "Ansoe Jahmiel", email: "jahmil.ansoe@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "1202418", naam: "April Jadon", email: "jadon.april@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "1202420", naam: "Ceder Calvin", email: "calvin.ceder@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "12023395", naam: "Chitan Jeetish", email: "jeetish.chitan@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "1202425", naam: "Garib Rewien", email: "rewien.garib@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "12024296", naam: "Glen Joshua", email: "joshua.glen@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "1202459", naam: "Helstone Nigel", email: "nigel.helstone@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "1202411", naam: "Jagdew Shayed", email: "shayed.jagdew@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "12022529", naam: "Julen Manuel", email: "manuel.julen@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "1202415", naam: "Koebeer Cherano", email: "cherano.koebeer@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "1202458", naam: "Kromoredjo Keanu", email: "keanu.kromoredjo@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "12021314", naam: "Lew Michah", email: "michah.lew@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "1202424", naam: "Lioni Donaphan", email: "donaphan.lioni@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "12022115", naam: "Nelis Sygourney", email: "sygourney.nelis@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "12023164", naam: "Neral Nathan", email: "nathan.neral@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "12023394", naam: "Ragghu Suryan", email: "suryan.ragghu@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "1202456", naam: "Rogers Trinity", email: "trinity.rogers@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "12024295", naam: "Sandvliet Leroy", email: "leroy.sandvliet@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "12023484", naam: "Soediono Collin", email: "collin.soediono@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "12021128", naam: "Sordam Jardel", email: "jardel.sordam@student.natin.sr", klas: "PT 2.06.02" },
+  { id: "1202422", naam: "Terborg Alex", email: "alex.terborg@student.natin.sr", klas: "PT 2.06.02" }
+];
+
+function selectStudent(studentId) {
+  if (!studentId) {
+    document.getElementById('studentName').value = '';
+    document.getElementById('studentKlas').value = '';
+    document.getElementById('studentEmail').value = '';
+    return;
+  }
+  const s = STUDENTEN.find(x => x.id === studentId);
+  if (s) {
+    document.getElementById('studentName').value = s.naam;
+    document.getElementById('studentKlas').value = s.klas;
+    document.getElementById('studentEmail').value = s.email;
+  }
+}
+
 let currentScreen = 1;
 let finalChoice = '';
 let profileData = null;
@@ -1274,9 +1377,9 @@ const STEPS = ['','Welkom','AO vs IB','Wie ben jij?','AI & jij','Jouw DNA','Keuz
 function startTool() {
   const name = document.getElementById('studentName').value.trim();
   const klas = document.getElementById('studentKlas').value;
+  const selectedId = document.getElementById('studentSelect').value;
   const email = document.getElementById('studentEmail').value.trim();
-  if (!name) { alert('Vul je naam in om verder te gaan.'); return; }
-  if (!klas) { alert('Kies je klas om verder te gaan.'); return; }
+  if (!selectedId) { alert('Kies jouw naam uit de lijst om verder te gaan.'); return; }
   if (!email || !email.includes('@')) { alert('Vul een geldig e-mailadres in.'); return; }
   goTo(2);
 }
@@ -1334,6 +1437,7 @@ function collectData() {
     return label + ': ' + v + '/7 (' + cat + ')';
   }).join('\n');
   return {
+    studentId: document.getElementById('studentSelect').value,
     naam: document.getElementById('studentName').value,
     klas: document.getElementById('studentKlas').value,
     email: document.getElementById('studentEmail').value.trim(),
