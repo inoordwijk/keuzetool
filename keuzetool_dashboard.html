@@ -63,6 +63,8 @@ body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink);f
 /* ── VIEWS ── */
 .view{display:none}
 .view.active{display:block}
+#view-insights.active{display:flex;flex-direction:column;height:calc(100vh - 52px);overflow:hidden}
+#view-sessie.active{display:block;height:calc(100vh - 52px);overflow:hidden}
 
 /* ══════════════════════════════
    OVERVIEW VIEW
@@ -218,7 +220,7 @@ body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink);f
 .ins-arrow:disabled{opacity:.3;cursor:default}
 
 /* ── SESSIE VIEW ── */
-.sess-wrap{background:#0f0f0f;min-height:calc(100vh - 52px);display:flex;flex-direction:column}
+.sess-wrap{background:#0f0f0f;height:100%;display:flex;flex-direction:column}
 .sess-slides-nav{background:#111;padding:10px 20px;display:flex;align-items:center;gap:6px;border-bottom:1px solid rgba(255,255,255,.06);flex-shrink:0}
 .sdot{width:22px;height:22px;border-radius:50%;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.3);font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;font-family:inherit}
 .sdot.active{background:#185FA5;border-color:#185FA5;color:#fff}
@@ -428,7 +430,7 @@ body{font-family:'Inter',sans-serif;background:var(--surface);color:var(--ink);f
 <!-- ══════════════════════════════
      INSIGHTS VIEW
 ══════════════════════════════ -->
-<div class="view" id="view-insights" style="overflow:hidden;height:calc(100vh - 52px);display:flex;flex-direction:column">
+<div class="view" id="view-insights">
 
   <div class="ins-hero" style="padding:36px 32px 40px">
     <div class="ins-eyebrow">NATIN ICT · Keuzetool 2026</div>
@@ -1012,7 +1014,6 @@ document.getElementById('ins-track')?.addEventListener('scroll', function() {
 });
 
 loadData();
-initInsightNav();
 // ── SESSIE VIEW ──
 const STELLINGEN = [
   'Ik weet het verschil tussen wat een AO-er en een IB-er op een <em>gewone werkdag</em> doet.',
