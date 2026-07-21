@@ -1241,10 +1241,23 @@ function openDossier(r) {
     ['sl4', 'Product vs. omgeving', 'Product', 'Omgeving'],
   ];
   document.getElementById('d-sliders').innerHTML = sliderDefs.map(([key, label, left, right]) => {
-    const raw = r[key] || '4';
-    const v = parseInt(raw) || 4;
+    const raw = r[key] || '';
+    // Determine position: sheet stores text like "Bouwen (sterk)" or numeric 1-7
+    const num = parseInt(raw);
+    let v = 4; // default: geen voorkeur
+    let lbl = raw || 'Geen voorkeur';
+    if (!isNaN(num) && num >= 1 && num <= 7) {
+      v = num;
+      lbl = v<=2?left+' (sterk)':v===3?left+' (licht)':v===4?'Geen voorkeur':v===5?right+' (licht)':right+' (sterk)';
+    } else if (raw) {
+      // Text from sheet — derive approximate position
+      if (raw.includes('sterk') && (raw.includes(left.split(' ')[0]) || raw.toLowerCase().includes('bouwen') || raw.toLowerCase().includes('maken') || raw.toLowerCase().includes('algo') || raw.toLowerCase().includes('product'))) v = 1;
+      else if (raw.includes('licht') && !raw.includes(right.split(' ')[0])) v = 3;
+      else if (raw.includes('sterk')) v = 7;
+      else if (raw.includes('licht')) v = 5;
+      else v = 4;
+    }
     const pct = ((v-1)/6*100).toFixed(0);
-    const lbl = v<=2?left+' (sterk)':v===3?left+' (licht)':v===4?'Geen voorkeur':v===5?right+' (licht)':right+' (sterk)';
     const clr = v<4?'var(--ao)':v>4?'var(--ib)':'var(--muted)';
     return `<div class="d-slider-item">
       <div class="d-slider-label"><span>${label}</span><span style="color:${clr};font-size:10px">${lbl}</span></div>
