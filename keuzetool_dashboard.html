@@ -1272,9 +1272,7 @@ function openDossier(r) {
 
   // AI analyse
   document.getElementById('d-ai-kop').textContent = r.profileKop || (r.karakternaam ? '"' + r.karakternaam + '"' : '—');
-  document.getElementById('d-ai-obs').innerHTML = (r.profileObs || r.motivatie || '—').replace(/
-
-/g,'<br><br>');
+  document.getElementById('d-ai-obs').innerHTML = (r.profileObs || r.motivatie || '—').split('\n\n').join('<br><br>');
   document.getElementById('d-ai-q-text').textContent = r.sessievraag || '—';
 
   // Load existing note from Sheet if available
